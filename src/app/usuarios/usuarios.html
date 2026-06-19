@@ -1,2 +1,12 @@
-<p>Módulo de Usuários works!</p>
+<h3>
+  Módulo de Usuários. Bem vindo, {{nomeUsu}}
+</h3>
 <app-usuarios-detalhe></app-usuarios-detalhe>
+
+<ul>
+  @for (habilitacao of habilitacoes; track habilitacao) {
+  <li>{{habilitacao}}</li>
+  } @empty {
+      <li>Nenhuma habilitação encontrada.</li>
+    }
+</ul>

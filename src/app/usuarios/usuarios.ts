@@ -8,4 +8,11 @@ import { UsuariosDetalhe } from "./usuarios-detalhe/usuarios-detalhe";
   templateUrl: './usuarios.html',
   styleUrl: './usuarios.scss',
 })
-export class Usuarios {}
+export class Usuarios {
+  nomeUsu: string;
+  habilitacoes: string[] = ['JAVA', 'SQL', 'JAVASCRIPT', 'ANGULAR', 'SPRING'];
+
+  constructor () {
+    this.nomeUsu = 'guilherme.neto';
+  }
+}
