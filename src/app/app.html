@@ -50,9 +50,9 @@
       </svg>
       <h1>Hello, {{ title() }}</h1>
       <p>Congratulations! Your app is running. 🎉</p>
+      <app-usuarios></app-usuarios>
       <app-primeiro></app-primeiro>
       <app-segundo></app-segundo>
-      <app-usuarios></app-usuarios>
     </div>
     <div class="divider" role="separator" aria-label="Divider"></div>
     <div class="right-side">
@@ -62,8 +62,6 @@
           { title: 'Segundo Componente' },
           { title: 'Módulo de Usuários'},
           { title: '...', link: 'https://angular.dev/tools/cli' },
-          { title: '...', link: 'https://angular.dev/tools/language-service' },
-          { title: '...', link: 'https://angular.dev/tools/devtools' },
         ]; track item.title) {
           <a
             class="pill"
