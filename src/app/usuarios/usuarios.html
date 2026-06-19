@@ -4,9 +4,9 @@
 <app-usuarios-detalhe></app-usuarios-detalhe>
 
 <ul>
-  @for (habilitacao of habilitacoes; track habilitacao) {
-  <li>{{habilitacao}}</li>
+  @for (curso of cursos; track curso) {
+  <li>{{ curso }}</li>
   } @empty {
-      <li>Nenhuma habilitação encontrada.</li>
+      <li>Nenhum curso encontrado.</li>
     }
 </ul>

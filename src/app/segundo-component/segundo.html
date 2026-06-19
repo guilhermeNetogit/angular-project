@@ -1,1 +1,11 @@
-<p>Segundo componente works!</p>
+
+  <h3>Segundo componente works!</h3>
+  <p>Resultado de 1 + 1 é : {{ 1 + 1 }}
+  <p>Resultado de 1 + 1 não é : {{ 1 + 1 + getValor() }}
+  </p>
+  <p>Curso de Angular é bom: {{ cursoAngular && getCurtir() }}</p>
+
+  <h4>Property Binding</h4>
+  <img src="{{ urlImg }}"> <!--Interpolação-->
+  <img [src]="urlImg2"> <!--DataBinding-->
+  <img bind-src="urlImg3">

@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { UsuariosDetalhe } from "./usuarios-detalhe/usuarios-detalhe";
+import { CursosService } from './services/cursos';
 
 @Component({
   selector: 'app-usuarios',
@@ -10,9 +11,10 @@ import { UsuariosDetalhe } from "./usuarios-detalhe/usuarios-detalhe";
 })
 export class Usuarios {
   nomeUsu: string;
-  habilitacoes: string[] = ['JAVA', 'SQL', 'JAVASCRIPT', 'ANGULAR', 'SPRING'];
+  cursos: string[] = [];
 
-  constructor () {
+  constructor (public cursosService: CursosService) {
     this.nomeUsu = 'guilherme.neto';
+    this.cursos = this.cursosService.getCursos();
   }
 }
