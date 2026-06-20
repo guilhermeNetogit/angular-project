@@ -1,3 +1,28 @@
 p, h4 {
   text-indent: 20px;
 }
+
+.pokemon-text {
+  color: #fff;
+  padding: 5px;
+  border-radius: 5px;
+  font-weight: bold; // Um estilo padrão para todos
+  transition: background-color 0.3s ease; // Efeito suave ao trocar de cor
+
+  // Cores baseadas no valor selecionado
+  &.bulbasaur-0, &.oddish-1, &.bellsprout-2 {
+    background-color: #4caf50; // Verde (Grass)
+  }
+
+  &.squirtle-3, &.psyduck-4, &.horsea-5 {
+    background-color: #2196f3; // Azul (Water)
+  }
+
+  &.charmander-6, &.vulpix-7, &.flareon-8 {
+    background-color: #f44336; // Vermelho (Fire)
+  }
+
+  &.mew-9, &.mewtwo-10 {
+    background-color: #9c27b0; // Roxo (Psychic)
+  }
+}

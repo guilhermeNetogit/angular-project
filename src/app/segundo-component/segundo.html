@@ -1,4 +1,4 @@
-
+<!--
   <h3>Segundo componente works!</h3>
   <p>Resultado de 1 + 1 é : {{ 1 + 1 }}
   <p>Resultado de 1 + 1 não é : {{ 1 + 1 + getValor() }}
@@ -6,6 +6,33 @@
   <p>Curso de Angular é bom: {{ cursoAngular && getCurtir() }}</p>
 
   <h4>Property Binding</h4>
-  <img src="{{ urlImg }}"> <!--Interpolação-->
-  <img [src]="urlImg2"> <!--DataBinding-->
+  <img src="{{ urlImg }}"> Interpolação
+  <img [src]="urlImg2"> DataBinding
   <img bind-src="urlImg3">
+-->
+
+<section class="property-binding">
+  <article>
+    <h3>Class and Style Binding</h3>
+    <div>
+      <h4>Selecione um Pokemon:</h4>
+      <mat-form-field>
+        <mat-label>Pokemon</mat-label>
+        <mat-select [formControl]="pokemonControl">
+          <mat-option>-- None --</mat-option>
+          @for (group of pokemonGroups; track group) {
+          <mat-optgroup [label]="group.name" [disabled]="group.disabled">
+            @for (pokemon of group.pokemon; track pokemon) {
+            <mat-option [value]="pokemon.value">{{pokemon.viewValue}}</mat-option>
+            }
+          </mat-optgroup>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <br>
+
+      <div class="pokemon-text {{ pokemonControl.value }}"> You selected: {{pokemonControl.value}}</div>
+    </div>
+  </article>
+</section>
