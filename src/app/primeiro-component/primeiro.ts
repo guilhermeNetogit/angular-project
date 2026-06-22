@@ -1,12 +1,14 @@
 import { Component } from "@angular/core";
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-primeiro',
-  template: `
-    <h4>Primeiro componente works!</h4>
-  `
+  templateUrl: './primeiro.html',
+  imports: [MatButtonModule]
 })
 
 export class PrimeiroComponent {
-
+  botaoClicado () {
+    alert(`Botão Clicado!!`);
+  }
 }

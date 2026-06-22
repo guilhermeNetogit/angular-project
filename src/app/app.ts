@@ -12,4 +12,7 @@ import { Usuarios } from "./usuarios/usuarios";
 })
 export class App {
   protected readonly title = signal('angular-project');
+
+  // Armazena a aba/componente que está visível atualmente
+  protected readonly componenteAtivo = signal<string>('usuarios');
 }
