@@ -1,0 +1,28 @@
+@use '@angular/material' as mat;
+
+:root {
+  @include mat.fab-overrides((
+    container-color: orange,
+    container-elevation-shadow: -4px -4px 5px 0px rgba(0, 0, 0, 0.5),
+  ));
+}
+
+section {
+  display: flex;
+  align-items: center;
+}
+
+.example-button-row {
+  max-width: 600px;
+}
+
+.example-button-row .mat-mdc-button-base {
+  margin: 8px 8px 8px 0;
+}
+
+.example-flex-container {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
