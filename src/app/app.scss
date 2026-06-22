@@ -1,40 +1,70 @@
-  :host {
-    --bright-blue: oklch(51.01% 0.274 263.83);
-    --electric-violet: oklch(53.18% 0.28 296.97);
-    --french-violet: oklch(47.66% 0.246 305.88);
-    --vivid-pink: oklch(69.02% 0.277 332.77);
-    --hot-red: oklch(61.42% 0.238 15.34);
-    --orange-red: oklch(63.32% 0.24 31.68);
+:host {
+  // --- Cores do gradiente e botões (Mantenha igual) ---
+  --bright-blue: oklch(51.01% 0.274 263.83);
+  --electric-violet: oklch(53.18% 0.28 296.97);
+  --french-violet: oklch(47.66% 0.246 305.88);
+  --vivid-pink: oklch(69.02% 0.277 332.77);
+  --hot-red: oklch(61.42% 0.238 15.34);
+  --orange-red: oklch(63.32% 0.24 31.68);
 
-    --gray-900: oklch(19.37% 0.006 300.98);
-    --gray-700: oklch(36.98% 0.014 302.71);
-    --gray-400: oklch(73.109% 0.0141 111.497);
+  --red-to-pink-to-purple-vertical-gradient: linear-gradient(
+    180deg,
+    var(--orange-red) 0%,
+    var(--vivid-pink) 50%,
+    var(--electric-violet) 100%
+  );
 
-    --red-to-pink-to-purple-vertical-gradient: linear-gradient(
-      180deg,
-      var(--orange-red) 0%,
-      var(--vivid-pink) 50%,
-      var(--electric-violet) 100%
-    );
+  --red-to-pink-to-purple-horizontal-gradient: linear-gradient(
+    90deg,
+    var(--orange-red) 0%,
+    var(--vivid-pink) 50%,
+    var(--electric-violet) 100%
+  );
 
-    --red-to-pink-to-purple-horizontal-gradient: linear-gradient(
-      90deg,
-      var(--orange-red) 0%,
-      var(--vivid-pink) 50%,
-      var(--electric-violet) 100%
-    );
+  --pill-accent: var(--bright-blue);
 
-    --pill-accent: var(--bright-blue);
+  // --- CONFIGURAÇÃO REATIVA DE CORES (A Mágica aqui) ---
+  // No Modo Claro padrão, usa as cores cinzas originais do template
+  --gray-900: oklch(19.37% 0.006 300.98);
+  --gray-700: oklch(36.98% 0.014 302.71);
+  --gray-400: oklch(73.109% 0.0141 111.497);
 
-    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-      Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
-      "Segoe UI Symbol";
-    box-sizing: border-box;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    display: block;
-    height: 100dvh;
-  }
+  // Configurações de layout base
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  display: block;
+  height: 100dvh;
+}
+
+// Quando a classe global .dark-mode estiver ativa na aplicação
+:host-context(.dark-mode) {
+  // Redireciona as variáveis para os tokens dinâmicos de texto do Material 3
+  --gray-900: var(--mat-sys-on-background); // O h1 fica branco/claro automaticamente
+  --gray-700: var(--mat-sys-on-surface-variant); // O p ganha um cinza claro legível
+  --gray-400: rgba(255, 255, 255, .5); // Ícones sociais se adaptam
+
+  .pill {
+      // 1. Muda o fundo para um cinza claro translúcido (com ótima leitura no escuro)
+      background: rgba(255, 255, 255, 0.75);
+
+      // 2. Cria uma borda cinza clara sutil e bem definida
+      border: 1px solid rgba(255, 255, 255);
+
+      // 3. Mantém o texto com a cor temática original para dar o contraste correto
+      color: var(--pill-accent);
+      font-weight: 600;
+    }
+
+    // Efeito ao passar o mouse (Hover) apenas no Modo Escuro
+    .pill:hover {
+      background: rgba(255, 255, 255, 0.5);
+      border-color: rgba(255, 255, 255);
+      box-shadow: 3px 3px 3px rgba(255, 255, 255, 0.442);
+    }
+}
+
 
   h1 {
     font-size: 2.5rem;
