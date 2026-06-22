@@ -8,6 +8,15 @@
           (click) = "botaoClicado()">Verificar...</button>
         </div>
       </section>
+
+      <section class="input-output-prop">
+        <article>
+          <h3>Input / Output Properties</h3>
+          <app-usuario [nome] = 'nomeUsuario'></app-usuario>
+
+          <app-contador [valor] ="5" (mudouValor)='onMudouValor($event)'></app-contador>
+        </article>
+      </section>
     </div>
   </article>
 </section>
