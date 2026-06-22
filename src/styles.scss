@@ -1,39 +1,117 @@
-// Include theming for Angular Material with `mat.theme()`.
-// This Sass mixin will define CSS variables that are used for styling Angular Material
-// components according to the Material 3 design spec.
-// Learn more about theming and how to use it for your application's
-// custom components at https://material.angular.dev/guide/theming
 @use '@angular/material' as mat;
 
-html {
-  height: 100%;
-  @include mat.theme(
-    (
-      color: (
-        primary: mat.$magenta-palette,
-        tertiary: mat.$violet-palette,
-      ),
-      typography: Roboto,
-      density: 0,
-    )
-  );
+// 1. Inclui os estilos base obrigatórios do Angular Material
+@include mat.core();
+
+// 2. Define o tema Claro (Light) nativo do Material 3
+$meu-tema-claro: mat.define-theme((color: (theme-type: light,
+        primary: mat.$azure-palette, // Cor primária padrão (azul suave)
+        tertiary: mat.$blue-palette,
+      )));
+
+// 3. Define o tema Escuro (Dark) nativo do Material 3
+$meu-tema-escuro: mat.define-theme((color: (theme-type: dark,
+        primary: mat.$azure-palette, // Mesma cor primária mapeada para o modo escuro
+        tertiary: mat.$blue-palette,
+      )));
+
+// 4. Aplica o Tema Claro por padrão no nó raiz do projeto
+:root {
+  @include mat.all-component-themes($meu-tema-claro);
 }
 
+// 5. Configurações essenciais do Body (fundos e textos reativos)
 body {
-  // Default the application to a light color theme. This can be changed to
-  // `dark` to enable the dark color theme, or to `light dark` to defer to the
-  // user's system settings.
   color-scheme: light;
-
-  // Set a default background, font and text colors for the application using
-  // Angular Material's system-level CSS variables. Learn more about these
-  // variables at https://material.angular.dev/guide/system-variables
-  background-color: var(--mat-sys-surface);
-  color: var(--mat-sys-on-surface);
+  background-color: var(--mat-sys-background);
+  color: var(--mat-sys-on-background);
   font: var(--mat-sys-body-medium);
-
-  // Reset the user agent margin.
   margin: 0;
   height: 100%;
 }
-/* You can add global styles to this file, and also import other style files */
+
+// 6. Quando o botão injetar a classe '.dark-mode', as cores mudam para o Tema Escuro
+.dark-mode {
+  color-scheme: dark;
+
+  // Atualiza apenas as variáveis de cores para a variante Dark
+  @include mat.all-component-colors($meu-tema-escuro);
+}
+
+h1,h2,h3,h4,h5,h6, p,
+span {
+  color: var(--mat-sys-on-background);
+  transition: color 0.35s ease; // Deixa a transição de cor suave
+}
+
+input {
+  background-color: var(--mat-sys-surface-container);
+  color: var(--mat-sys-on-surface);
+  border: 1px solid var(--mat-sys-outline);
+  padding: 8px;
+  border-radius: 4px;
+  caret-color: var(--mat-sys-primary);
+}
+
+// Suaviza a troca de cor do fundo da tela inteira
+body {
+  transition: background-color 0.35s ease, color 0.35s ease;
+}
+
+// Alinha os botões e o input perfeitamente ao centro
+.example-flex-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px; // Cria um espaçamento elegante entre os botões e o input
+}
+
+// Estiliza o campo de texto do contador
+.example-flex-container input[type="text"] {
+  width: 60px;
+  height: 56px; // Mesma altura padrão dos botões matFab
+  text-align: center;
+  font-size: 1.2rem;
+  font-weight: bold;
+
+  // Mágica do Material 3:
+  background-color: var(--mat-sys-surface-container-highest); // Fundo adaptativo claro/escuro
+  color: var(--mat-sys-on-surface); // Cor do texto automática
+  border: 1px solid var(--mat-sys-outline-variant); // Borda sutil
+  border-radius: 8px;
+
+  // Remove a borda padrão de clique do navegador
+  outline: none;
+  box-sizing: border-box;
+  transition: background-color 0.35s, color 0.35s;
+}
+
+.header-container {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 80px !important; // Uma distância generosa em pixels para garantir o afastamento
+  width: 100% !important;
+  max-width: 750px !important;
+  margin-bottom: 2rem !important;
+}
+
+// Garante que o botão se descole do topo da logo
+.theme-toggle-btn {
+  margin-left: 20px !important;
+  transform: translateY(-7px) !important;
+
+  border-radius: 50%;
+
+  // Mantém uma proporção idêntica de largura e altura
+  width: 40px !important;
+  height: 40px !important;
+  padding: 0 !important;
+
+  // Garante que o ícone fique centralizado no meio do círculo
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer;
+}
