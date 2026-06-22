@@ -25,4 +25,9 @@ p, h4 {
   &.mew-9, &.mewtwo-10 {
     background-color: #9c27b0; // Roxo (Psychic)
   }
+
+  &.pikachu-11, &.voltorb-12, &.zapdos-13 {
+    background-color: #ffeb3b;
+    color: rgb(50,50,50);
+  }
 }
