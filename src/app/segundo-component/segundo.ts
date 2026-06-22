@@ -58,6 +58,14 @@ export class SegundoComponent {
         {value: 'mewtwo-10', viewValue: 'Mewtwo'},
       ],
     },
+    {
+      name: 'Eletric',
+      pokemon: [
+        {value: 'pikachu-11', viewValue: 'Pikachu'},
+        {value: 'voltorb-12', viewValue: 'Voltorb'},
+        {value: 'zapdos-13', viewValue: 'Zapdos'}
+      ]
+    }
   ]
 
   cursoAngular: boolean = true;
