@@ -17,4 +17,8 @@ export class Usuarios {
     this.nomeUsu = 'guilherme.neto';
     this.cursos = this.cursosService.getCursos();
   }
+
+  onAddCurso(curso: string) {
+    this.cursosService.addCurso(curso);
+  }
 }

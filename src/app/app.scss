@@ -28,6 +28,7 @@
   --gray-900: oklch(19.37% 0.006 300.98);
   --gray-700: oklch(36.98% 0.014 302.71);
   --gray-400: oklch(73.109% 0.0141 111.497);
+  --gray-200: oklch(93.109% 0.0141 111.497);
 
   // Configurações de layout base
   font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -92,10 +93,6 @@
     padding: 1rem;
     box-sizing: inherit;
     position: relative;
-  }
-
-  .angular-logo {
-    max-width: 9.2rem;
   }
 
   .content {
@@ -189,7 +186,7 @@
   }
 
   .social-links a:hover svg path {
-    fill: var(--gray-900);
+    fill: var(--gray-200);
   }
 
   @media screen and (max-width: 650px) {

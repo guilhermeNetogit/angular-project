@@ -1,6 +1,8 @@
 <h3>
   Módulo de Usuários. Bem vindo, {{nomeUsu}}
 </h3>
+<input type="text" #cursoInput placeholder="Digite o nome do curso...">
+<button (click)="onAddCurso(cursoInput.value)">Add Cuso</button>
 <app-usuarios-detalhe></app-usuarios-detalhe>
 
 <ul>

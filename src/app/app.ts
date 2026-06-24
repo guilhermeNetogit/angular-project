@@ -5,16 +5,17 @@ import { SegundoComponent } from "./segundo-component/segundo";
 import { TerceiroComponent } from "./terceiro-component/terceiro";
 import { Usuarios } from "./usuarios/usuarios";
 import { MatIcon } from "@angular/material/icon";
+import { Logo } from "./logo/logo";
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, Usuarios, PrimeiroComponent, SegundoComponent, TerceiroComponent, MatIcon],
+  imports: [RouterOutlet, Usuarios, PrimeiroComponent, SegundoComponent, TerceiroComponent, MatIcon, Logo],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
 export class App {
 
-  isDarkMode = signal(false);
+  isDarkMode = signal(localStorage.getItem('theme') === 'dark');
 
   protected readonly title = signal('angular-project');
 
@@ -35,6 +36,11 @@ export class App {
     }
 
     toggleTheme() {
-      this.isDarkMode.update(dark => !dark);
-    }
+    this.isDarkMode.update(dark => {
+      const nextMode = !dark;
+      // 2. Salva o novo estado no localStorage para persistir no F5
+      localStorage.setItem('theme', nextMode ? 'dark' : 'light');
+      return nextMode;
+    });
+  }
 }

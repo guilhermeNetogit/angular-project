@@ -1,0 +1,11 @@
+input {
+  border: 1px solid #999; /* Define uma borda cinza visível */
+  padding: 6px 10px;      /* Dá espaço para o texto dentro dele */
+  border-radius: 4px;     /* Arredonda levemente os cantos */
+  outline: none;          /* Remove aquela linha preta grossa padrão ao clicar */
+  margin-right: 4px;
+}
+
+input:focus {
+  border-color: #007bff;  /* Muda a cor da borda para azul quando você clica para digitar */
+}
