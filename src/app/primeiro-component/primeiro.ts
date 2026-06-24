@@ -11,12 +11,15 @@ import { OutputProperty } from "../output-property/output-property";
 
 export class PrimeiroComponent {
   botaoClicado () {
-    alert(`Botão Clicado!!`);
+    alert(`O número atual é: ${this.valorContador}...`);
   }
 
   onMudouValor(evento: any) {
     console.log(evento.novoValor);
+    this.valorContador = evento.novoValor;
   }
 
   nomeUsuario: string =  'usuario.sa';
+
+  valorContador: number = 5;
 }

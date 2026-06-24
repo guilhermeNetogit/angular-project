@@ -1,0 +1,33 @@
+<p>Pipes examples works!</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Cód. Usuário</th>
+      <th>Nome</th>
+      <th>Senha</th>
+      <th>Salário</th>
+      <th>Data Inc.</th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (item of usuarios; track item.codUsu) {
+    <tr>
+      <td>{{ item.codUsu | number}}</td>
+      <td>{{ item.nomeUsu | uppercase }}</td>
+      <td>{{ item.senha }}</td>
+      <td>{{ item.salario | currency: 'BRL' }} </td>
+      <td>{{ item.dtInc | date:'dd/MM/yyyy' }}</td>
+    </tr>
+    }
+  </tbody>
+  <tfoot>
+    <tr>
+      <td colspan="4">Total Geral:</td>
+      <td>{{ usuarios.length}}</td>
+    </tr>
+  </tfoot>
+</table>
+
+<p>{{usuarios | json }}</p>
+
