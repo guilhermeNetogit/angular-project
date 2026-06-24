@@ -1,0 +1,31 @@
+table {
+  width: 100%;
+  max-width: 800px;
+  border-collapse: collapse; /* Une as bordas em uma linha única */
+  font-family: Arial, sans-serif;
+  margin: 20px 0;
+}
+
+th, td {
+  padding: 12px;
+  text-align: left; /* Alinha o texto à esquerda */
+  border-bottom: 1px solid #ddd; /* Cria a linha horizontal divisória */
+}
+
+th {
+  font-weight: bold;
+  background-color: #f9f9f9;
+}
+
+/* Alinha os valores numéricos à direita para melhor leitura */
+td:nth-child(4), th:nth-child(4) {
+  max-width: 200px;
+  white-space: normal;
+  word-wrap: break-word;
+}
+
+/* Estilização opcional para destacar a linha do Total */
+tfoot tr {
+  font-weight: bold;
+  background-color: #f5f5f5;
+}

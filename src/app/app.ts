@@ -6,10 +6,11 @@ import { TerceiroComponent } from "./terceiro-component/terceiro";
 import { Usuarios } from "./usuarios/usuarios";
 import { MatIcon } from "@angular/material/icon";
 import { Logo } from "./logo/logo";
+import { Pipes } from './pipes/pipes';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, Usuarios, PrimeiroComponent, SegundoComponent, TerceiroComponent, MatIcon, Logo],
+  imports: [RouterOutlet, Usuarios, PrimeiroComponent, SegundoComponent, TerceiroComponent, MatIcon, Logo, Pipes],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
