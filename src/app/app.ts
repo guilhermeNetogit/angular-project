@@ -1,12 +1,12 @@
 import { Component, effect, signal } from '@angular/core';
-import { RouterOutlet, RouterLink } from '@angular/router';
+import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 import { MatIcon } from "@angular/material/icon";
 import { Logo } from "./logo/logo";
 import { routes } from './app.routes';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, MatIcon, Logo, RouterLink],
+  imports: [RouterOutlet, MatIcon, Logo, RouterLink, RouterLinkActive],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
