@@ -1,24 +1,19 @@
 import { Component, effect, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import { PrimeiroComponent } from "./primeiro-component/primeiro";
-import { SegundoComponent } from "./segundo-component/segundo";
-import { TerceiroComponent } from "./terceiro-component/terceiro";
-import { Usuarios } from "./usuarios/usuarios";
+import { RouterOutlet, RouterLink } from '@angular/router';
 import { MatIcon } from "@angular/material/icon";
 import { Logo } from "./logo/logo";
-import { Pipes } from './pipes/pipes';
+import { routes } from './app.routes';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, Usuarios, PrimeiroComponent, SegundoComponent, TerceiroComponent, MatIcon, Logo, Pipes],
+  imports: [RouterOutlet, MatIcon, Logo, RouterLink],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
 export class App {
+  menuItems = routes.filter(r => r.data && r.data['title']);
 
   isDarkMode = signal(localStorage.getItem('theme') === 'dark');
-
-  protected readonly title = signal('angular-project');
 
   // Armazena a aba/componente que está visível atualmente
   protected readonly componenteAtivo = signal<string>('usuarios');
