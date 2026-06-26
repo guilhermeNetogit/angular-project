@@ -12,7 +12,9 @@
     <div class="right-side">
       <div class="pill-group">
         @for (item of menuItems; track item.path) {
-        <a class="pill" [routerLink]="item.path">
+        <a class="pill" [routerLink]="item.path"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="item.path === 'home' || item.path === '' ? { exact: true } : { exact: false }">
           <span>{{ item.data?.['title'] }}</span>
           <svg xmlns="http://www.w3.org/2000/svg" height="14" viewBox="0 -960 960 960" width="14" fill="currentColor">
             <path
