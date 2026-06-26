@@ -10,11 +10,9 @@ import { CursosService } from './services/cursos';
   styleUrl: './usuarios.scss',
 })
 export class Usuarios {
-  nomeUsu: string;
   cursos: string[] = [];
 
   constructor (public cursosService: CursosService) {
-    this.nomeUsu = 'guilherme.neto';
     this.cursos = this.cursosService.getCursos();
   }
 
