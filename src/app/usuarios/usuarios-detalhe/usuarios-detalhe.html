@@ -1,1 +1,16 @@
-<p>Usuarios-detalhe works!</p>
+<h3>Usuarios-detalhe works!</h3>
+
+@if (cursoSelecionado) {
+  <h4>
+    ID Curso: #{{ cursoSelecionado.id }}
+  </h4>
+  <p><strong>Curso: {{ cursoSelecionado.nomeCurso }}</strong></p>
+} @else {
+  <p>Curso não encontrado para o ID {{id}}.</p>
+}
+
+<div>
+  <button mat-stroked-button color="primary" [routerLink]="['/usuarios']">
+    Voltar para Usuários
+  </button>
+</div>

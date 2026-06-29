@@ -9,3 +9,10 @@ input {
 input:focus {
   border-color: #007bff;  /* Muda a cor da borda para azul quando você clica para digitar */
 }
+
+/* Classe utilitária opcional para organizar o espaçamento do container */
+.form-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}

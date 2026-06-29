@@ -1,17 +1,27 @@
 import { Injectable } from '@angular/core';
 
+export interface Curso {
+  id: number;
+  nomeCurso: string;
+}
+
 @Injectable({
   providedIn: 'root',
 })
 export class CursosService {
 
-  cursos: string[] = ['JAVA', 'SQL', 'JAVASCRIPT', 'ANGULAR', 'SPRING', 'HTML5', 'CSS3'];
+  cursos: Curso[] = [
+    {id: 1, nomeCurso: 'JAVA'},
+    {id: 2, nomeCurso: 'SQL'},
+    {id: 3, nomeCurso: 'JAVASCRIPT'},
+    {id: 4, nomeCurso: 'ANGULAR'}
+  ];
 
-  getCursos() {
+  getCursos(): Curso[] {
     return this.cursos;
   }
 
-  addCurso(curso: string) {
+  addCurso(curso: Curso): void {
     this.cursos.push(curso);
   }
 }
