@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { MatListModule } from '@angular/material/list';
-import { RouterLink, RouterOutlet } from '@angular/router';
+import { ActivatedRoute, RouterLink, RouterOutlet } from '@angular/router';
 import { Curso, CursosService } from './services/cursos';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-usuarios',
@@ -12,9 +13,24 @@ import { Curso, CursosService } from './services/cursos';
 })
 export class Usuarios {
   cursos: Curso[] = [];
+  pagina!: number;
+  inscricao: Subscription;
 
-  constructor(public cursosService: CursosService) {
+  constructor(
+    public cursosService: CursosService,
+    private route: ActivatedRoute
+  ) {
     this.cursos = this.cursosService.getCursos();
+
+    this.inscricao = this.route.queryParams.subscribe(
+      (queryParams: any) => {
+        this.pagina = queryParams['pagina'];
+      }
+    );
+  }
+
+  ngOnDestroy() {
+    this.inscricao.unsubscribe();
   }
 
   onAddCurso(nomeCurso: string) {
