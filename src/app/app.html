@@ -12,7 +12,9 @@
     <div class="right-side">
       <div class="pill-group">
         @for (item of menuItems; track item.path) {
-        <a class="pill" [routerLink]="item.path"
+        <a class="pill"
+        [routerLink]="item.path"
+        [queryParams]="item.path === 'usuarios' ? {pagina:1} : null"
         routerLinkActive="active"
         [routerLinkActiveOptions]="item.path === 'home' || item.path === '' ? { exact: true } : { exact: false }">
           <span>{{ item.data?.['title'] }}</span>
