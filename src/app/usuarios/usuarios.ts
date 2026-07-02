@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { MatListModule } from '@angular/material/list';
-import { ActivatedRoute, RouterLink, RouterOutlet } from '@angular/router';
-import { Curso, CursosService } from './services/cursos';
+import { ActivatedRoute, Router, RouterLink, RouterOutlet } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { Curso, CursosService } from './services/cursos';
 
 @Component({
   selector: 'app-usuarios',
@@ -13,32 +13,42 @@ import { Subscription } from 'rxjs';
 })
 export class Usuarios {
   cursos: Curso[] = [];
-  pagina!: number;
+  pagina: number = 1;
   inscricao: Subscription;
 
   constructor(
     public cursosService: CursosService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router,
   ) {
     this.cursos = this.cursosService.getCursos();
 
-    this.inscricao = this.route.queryParams.subscribe(
-      (queryParams: any) => {
-        this.pagina = queryParams['pagina'];
+    this.inscricao = this.route.queryParams.subscribe((queryParams) => {
+      if (queryParams['pagina']) {
+        this.pagina = Number(queryParams['pagina']);
+      } else {
+        this.router.navigate([], {
+          relativeTo: this.route,
+          queryParams: { pagina: 1 },
+          queryParamsHandling: 'merge',
+        });
       }
-    );
+    });
   }
 
   ngOnDestroy() {
-    this.inscricao.unsubscribe();
+    if (this.inscricao) {
+      this.inscricao.unsubscribe();
+    }
   }
 
-  onAddCurso(nomeCurso: string) {
+  onAddCurso(nomeCurso: string, descricao: string) {
     if (!nomeCurso.trim()) return;
 
     const novoCurso: Curso = {
       id: this.cursos.length + 1,
       nomeCurso: nomeCurso,
+      descricao: descricao,
     };
 
     this.cursosService.addCurso(novoCurso);

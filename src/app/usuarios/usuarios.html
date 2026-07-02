@@ -4,8 +4,9 @@
 <!-- Container usando a classe do arquivo SCSS -->
 <div class="form-container">
   <input type="text" #cursoInput placeholder="Digite o nome do curso...">
+  <input #descricaoInput type="text" placeholder="Descrição do curso...">
 
-  <button mat-raised-button color="primary" (click)="onAddCurso(cursoInput.value); cursoInput.value = ''">
+  <button mat-raised-button color="primary" (click)="onAddCurso(cursoInput.value, descricaoInput.value); cursoInput.value = ''; descricaoInput.value = ''">
     Add Curso
   </button>
 </div>
@@ -15,7 +16,7 @@
 <mat-action-list>
   @for (curso of cursos; track curso.id) {
     <button mat-list-item
-    [routerLink]="['/curso', curso.id]"
+    [routerLink]="['curso', curso.id]"
     (click)="action(curso.nomeCurso)">
       {{ curso.id }}. {{ curso.nomeCurso }}
     </button>
