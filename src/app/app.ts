@@ -2,7 +2,7 @@ import { Component, effect, signal } from '@angular/core';
 import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 import { MatIcon } from "@angular/material/icon";
 import { Logo } from "./logo/logo";
-import { routes } from './app.routes';
+import { appRoutes } from './app.routes';
 
 @Component({
   selector: 'app-root',
@@ -11,7 +11,7 @@ import { routes } from './app.routes';
   styleUrl: './app.scss'
 })
 export class App {
-  menuItems = routes.filter(r => r.data && r.data['title']);
+  menuItems = appRoutes.filter(r => r.data && r.data['title']);
 
   isDarkMode = signal(localStorage.getItem('theme') === 'dark');
 

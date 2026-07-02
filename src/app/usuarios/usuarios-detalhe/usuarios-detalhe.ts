@@ -1,11 +1,12 @@
+import { Location } from '@angular/common';
 import { Component, Input } from '@angular/core';
-import { Curso, CursosService } from '../services/cursos';
-import { Router, RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
+import { Router } from '@angular/router';
+import { Curso, CursosService } from '../services/cursos';
 
 @Component({
   selector: 'app-usuarios-detalhe',
-  imports: [RouterLink, MatButtonModule],
+  imports: [MatButtonModule],
   templateUrl: './usuarios-detalhe.html',
   styleUrl: './usuarios-detalhe.scss',
 })
@@ -14,7 +15,19 @@ export class UsuariosDetalhe {
 
   cursoSelecionado?: Curso;
 
-  constructor(private cursosService: CursosService) {}
+  constructor(
+    private cursosService: CursosService,
+    private location: Location,
+    private router: Router,
+  ) {}
+
+  voltar(): void {
+    if (!this.cursoSelecionado) {
+      this.router.navigate(['/usuarios'], { queryParams: { pagina: 1 } });
+    } else {
+      this.location.back();
+    }
+  }
 
   ngOnInit() {
     if (this.id) {
@@ -22,8 +35,7 @@ export class UsuariosDetalhe {
       const idNumero = Number(this.id);
 
       // Busca a lista de cursos e encontra o correspondente ao ID
-      this.cursoSelecionado = this.cursosService.getCursos()
-        .find(curso => curso.id === idNumero);
+      this.cursoSelecionado = this.cursosService.getCursos().find((curso) => curso.id === idNumero);
     }
   }
 }

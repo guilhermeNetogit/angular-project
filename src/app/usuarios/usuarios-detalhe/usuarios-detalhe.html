@@ -5,12 +5,13 @@
     ID Curso: #{{ cursoSelecionado.id }}
   </h4>
   <p><strong>Curso: {{ cursoSelecionado.nomeCurso }}</strong></p>
+  <p><strong>Descrição: </strong> {{ cursoSelecionado.descricao }}</p>
 } @else {
   <p>Curso não encontrado para o ID {{id}}.</p>
 }
 
 <div>
-  <button mat-stroked-button color="primary" [routerLink]="['/usuarios']">
+  <button mat-stroked-button color="primary" (click)="voltar()">
     Voltar para Usuários
   </button>
 </div>
