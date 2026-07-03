@@ -17,6 +17,9 @@ export const appRoutes: Routes = [
   { path: 'primeiro', component: PrimeiroComponent, data: { title: 'First Module' }},
   { path: 'segundo', component: SegundoComponent, data: { title: 'Second Module' }},
   { path: 'terceiro', component: TerceiroComponent, data: { title: 'Third Module' }},
+  { path: 'quarto',
+    loadChildren: () => import('./quarto-component/quarto.routing').then(m => m.quartoRoutes),
+    data: {title: 'Fourth Module'}},
   //{ path: 'curso/:id', component: UsuariosDetalhe }
 ];
 
