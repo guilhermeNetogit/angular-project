@@ -8,4 +8,9 @@ export const usuariosRoutes: Routes = [
   { path: 'curso/:id', component: UsuariosDetalhe }
 ];
 
+@NgModule({
+  imports: [RouterModule.forChild(usuariosRoutes)],
+  exports: [RouterModule]
+})
+
 export class UsuariosRoutingModule{}
