@@ -105,8 +105,8 @@ body {
   border-radius: 50%;
 
   // Mantém uma proporção idêntica de largura e altura
-  width: 40px !important;
-  height: 40px !important;
+  width: 30px !important;
+  height: 30px !important;
   padding: 0 !important;
 
   // Garante que o ícone fique centralizado no meio do círculo
@@ -114,4 +114,10 @@ body {
   align-items: center !important;
   justify-content: center !important;
   cursor: pointer;
+}
+
+.theme-toggle-btn mat-icon {
+  font-size: 18px !important;
+  width: 18px !important;
+  height: 18px !important;
 }

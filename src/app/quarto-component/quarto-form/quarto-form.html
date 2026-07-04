@@ -1,1 +1,24 @@
 <h4>Quarto-form works!</h4>
+
+@if (testeSelecionado) {
+  <form class="example-form">
+
+    <mat-form-field class="example-full-width">
+      <mat-label>ID</mat-label>
+      <input matInput disabled [value]="testeSelecionado.id">
+    </mat-form-field>
+
+    <mat-form-field class="example-full-width">
+      <mat-label>Descrição</mat-label>
+      <input matInput name="descricao" [(ngModel)]="testeSelecionado.descricao" placeholder="Ex. Teste...">
+    </mat-form-field>
+
+    <mat-form-field class="example-full-width">
+      <mat-label>Resumo</mat-label>
+      <textarea matInput name="resumo" [(ngModel)]="testeSelecionado.resumo" placeholder="Ex. Problema de lógica..."></textarea>
+    </mat-form-field>
+
+  </form>
+} @else {
+  <p>Carregando dados do teste ou ID inválido...</p>
+}

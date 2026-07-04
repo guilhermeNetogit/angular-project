@@ -1,0 +1,43 @@
+#resumo {
+  text-align: justify;
+}
+
+.btn-edit {
+  border-radius: 6px !important;
+  width: 32px !important;
+  height: 32px !important;
+  line-height: 32px !important;
+  padding: 0 !important;
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+  transition: all 0.2s ease-in-out; /* Deixa o efeito de hover suave */
+
+  // Efeito de destaque ao passar o mouse
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.06) !important; /* Fundo cinza bem claro */
+    color: #9fa1ad !important;                         /* Muda a cor do ícone (ex: Azul primário) */
+    border-color: #9fa1ad !important;
+  }
+}
+
+#edit {
+  font-size: 18px !important;
+  width: 18px !important;
+  height: 18px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer;
+}
+
+.title-container {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+
+  h4 {
+    margin: 0;
+  }
+}

@@ -1,3 +1,15 @@
-<h3>Quarto Componente works!</h3>
+<h3>Lista teste do quarto componente.</h3>
+
+<mat-action-list>
+  @for (quarto of quartos; track quarto.id) {
+    <button mat-list-item
+    [routerLink]="[quarto.id]"
+    (click)="action(quarto.descricao)">
+      {{ quarto.id }}. {{ quarto.descricao }}
+    </button>
+  } @empty {
+    <mat-list-item disabled>Nenhum teste encontrado.</mat-list-item>
+  }
+</mat-action-list>
 
 <router-outlet></router-outlet>
