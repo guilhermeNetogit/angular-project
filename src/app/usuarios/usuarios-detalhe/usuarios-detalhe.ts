@@ -2,7 +2,7 @@ import { Location } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { Router } from '@angular/router';
-import { Curso, CursosService } from '../services/cursos';
+import { Curso, CursosService } from '../services/cursos.service';
 
 @Component({
   selector: 'app-usuarios-detalhe',

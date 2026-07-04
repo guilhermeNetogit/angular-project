@@ -1,1 +1,18 @@
-<h4>Quarto-detalhe works!</h4>
+<div class="title-container">
+  <h4>Detalhes do teste</h4>
+  <!-- Adicionada a classe btn-edit ao botão -->
+  <button mat-icon-button [routerLink]="['/quarto', id, 'edit']" class="btn-edit" aria-label="Editar teste">
+    <mat-icon id="edit">edit</mat-icon>
+  </button>
+</div>
+
+@if (testeSelecionado) {
+  <h4>
+    ID do Teste: #{{ testeSelecionado.id }}
+  </h4>
+
+  <p><strong>Descrição: </strong> {{ testeSelecionado.descricao }}</p>
+  <p id="resumo"><strong>Resumo: </strong> {{ testeSelecionado.resumo }}</p>
+} @else {
+  <p>Curso não encontrado para o ID {{id}}.</p>
+}

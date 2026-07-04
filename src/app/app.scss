@@ -170,6 +170,11 @@ main {
   }
 }
 
+.left-side {
+  width: 100%;
+  max-width: 400px;
+}
+
 /* --- RESPONSIVIDADE --- */
 @media screen and (max-width: 650px) {
   .content {

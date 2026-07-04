@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { MatListModule } from '@angular/material/list';
 import { ActivatedRoute, Router, RouterLink, RouterOutlet } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { Curso, CursosService } from './services/cursos';
+import { Curso, CursosService } from './services/cursos.service';
 
 @Component({
   selector: 'app-usuarios',
