@@ -1,3 +1,24 @@
 <h1>Hello, {{ title() }}</h1>
 <p>Congratulations! Your app is running. 🎉</p>
-<h3> Bem vindo, {{ nomeUsu }}! </h3>
+<h3> Bem vindo, {{ authService.usuarioAtual() || ' Visitante' }}! </h3>
+
+<div class="example-container">
+  <section>
+    <div class="example-button-row">
+      <div class="example-flex-container">
+
+        @if (authService.usuarioAtual()) {
+        <button matFab extended type="submit" class="btn-icon-right btn-logout" (click)="sair()">
+          Sair
+          <mat-icon>logout</mat-icon>
+        </button>
+      } @else {
+        <button matFab extended type="button" class="btn-icon-right btn-login" (click)="irParaLogin()">
+          Login
+          <mat-icon>login</mat-icon>
+        </button>
+      }
+      </div>
+    </div>
+  </section>
+</div>

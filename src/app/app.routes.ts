@@ -5,11 +5,13 @@ import { Pipes } from './pipes/pipes';
 import { PrimeiroComponent } from './primeiro-component/primeiro';
 import { SegundoComponent } from './segundo-component/segundo';
 import { TerceiroComponent } from './terceiro-component/terceiro';
+import { LoginComponent } from './login/login';
 //import { Usuarios } from './usuarios/usuarios';
 //import { UsuariosDetalhe } from './usuarios/usuarios-detalhe/usuarios-detalhe';
 
 export const appRoutes: Routes = [
   { path: '', component: Home, data: { title: 'Home' }},
+  { path: 'login', component: LoginComponent, data: { skipMenu: true }},
   { path: 'usuarios',
     loadChildren: () => import('./usuarios/usuarios.routing').then(m => m.usuariosRoutes),
     data: { title: 'Users Module' } },

@@ -1,0 +1,36 @@
+<h3>Login</h3>
+
+<div class="example-container">
+
+  <mat-form-field>
+    <mat-label>Enter your login</mat-label>
+    <input [(ngModel)]="user.login" matInput class="example-left-align"/>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Enter your password</mat-label>
+    <input [(ngModel)]="user.senha" matInput [type]="hide() ? 'password' : 'text'" />
+    <button
+      matIconButton
+      matSuffix
+      (click)="clickEvent($event)"
+      [attr.aria-label]="'Hide password'"
+      [attr.aria-pressed]="hide()"
+    >
+      <mat-icon>{{hide() ? 'visibility_off' : 'visibility'}}</mat-icon>
+    </button>
+  </mat-form-field>
+
+  <section>
+    <div class="example-button-row">
+    <div class="example-flex-container">
+      <button matFab extended type="submit" class="btn-icon-right btn-login" (click)="fazerLogin()">
+        Login
+        <mat-icon>login</mat-icon>
+      </button>
+    </div>
+    </div>
+  </section>
+
+</div>
+

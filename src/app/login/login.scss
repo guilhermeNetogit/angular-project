@@ -1,14 +1,17 @@
+/* Empilha os blocos um embaixo do outro alinhados à esquerda */
 .example-container {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 12px;
+  gap: 12px; /* Controla o espaçamento vertical entre os campos */
 }
 
+/* Define que os dois blocos de input terão exatamente o mesmo tamanho */
 .example-container mat-form-field {
   width: 320px; /* Altere este valor para a largura total que desejar */
 }
 
+/* Mantém a estilização para esconder as setas do input numérico */
 .example-left-align {
   text-align: left;
 }
@@ -25,6 +28,12 @@ input.example-left-align {
 section {
   display: flex;
   align-items: center;
+}
+
+.example-label {
+  font-size: 14px;
+  margin: 0 16px 0 8px;
+  min-width: 120px;
 }
 
 .example-button-row {
@@ -47,25 +56,25 @@ section {
   align-items: center;
 }
 
-/* Força o ícone a ir para o final (direita) */
+/* Força o ícone a ir para o final */
 .btn-icon-right ::ng-deep .mat-icon {
   order: 2 !important;
   margin-left: 8px;
   margin-right: 0 !important;
 }
 
-/* Força o texto a ir para o começo (esquerda) */
+/* Força o texto a ir para o começo */
 .btn-icon-right ::ng-deep .mdc-fab__label text {
   order: 1 !important;
 }
 
+/* Caso o texto não mude apenas com o seletor acima, este garante o lado esquerdo */
 .btn-icon-right ::ng-deep .mdc-fab__label > :not(.mat-icon) {
   order: 1 !important;
 }
 
-/* --- CLASSE DO LOGOUT EM VERMELHO --- */
-.btn-logout, .btn-login {
-  height: 40px!important;
+.btn-login {
+height: 40px!important;
   border-radius: 12px!important;
   padding: 0 16px !important;
   font-size: 13px !important;
@@ -74,16 +83,5 @@ section {
     font-size: 20px !important;
     width: 20px !important;
     height: 20px !important;
-  }
-
-}
-
-.btn-logout {
-  background-color: #d32f2f !important;
-  color: white !important;
-
-  &:hover {
-    background-color: #d75858 !important;
-    cursor: pointer;
   }
 }

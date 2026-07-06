@@ -4,8 +4,15 @@ import { Usuarios } from './usuarios';
 import { UsuariosDetalhe } from './usuarios-detalhe/usuarios-detalhe';
 
 export const usuariosRoutes: Routes = [
-  { path: '', component: Usuarios, data: { title: 'Users Module' } },
-  { path: 'curso/:id', component: UsuariosDetalhe }
+  {
+    path: '',
+    loadComponent: () => import('./usuarios').then(m => m.Usuarios),
+    data: { title: 'Users Module' }
+  },
+  {
+    path: 'curso/:id',
+    loadComponent: () => import('./usuarios-detalhe/usuarios-detalhe').then(m => m.UsuariosDetalhe)
+  }
 ];
 
 @NgModule({

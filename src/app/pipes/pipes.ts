@@ -9,7 +9,7 @@ import { Component } from '@angular/core';
 })
 export class Pipes {
   usuarios = [
-    {codUsu: 21, nomeUsu: 'user2.test', senha: 'stronger@password#', salario: 1, dtInc: new Date(2026,5,25)},
+    {codUsu: 21, nomeUsu: 'user2.test', senha: 'stronger@password#', salario: 1620, dtInc: new Date(2026,5,25)},
     { codUsu: 314, nomeUsu: 'user.test', senha: 'strong@password#', salario: 1620, dtInc: new Date(2026,5,24)},
     { codUsu: 0, nomeUsu: 'sup', senha: 'strong@password#', salario:3240, dtInc: new Date(2026,5,24)
     }
