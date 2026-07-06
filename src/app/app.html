@@ -9,6 +9,8 @@
       <router-outlet></router-outlet>
     </div>
     <div class="divider" role="separator" aria-label="Divider"></div>
+
+    @if (mostrarMenu()) {
     <div class="right-side">
       <div class="pill-group">
         @for (item of menuItems; track item.path) {
@@ -39,5 +41,6 @@
         </a>
       </div>
     </div>
+  }
   </div>
 </main>

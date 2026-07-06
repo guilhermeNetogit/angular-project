@@ -1,16 +1,22 @@
-import { Component, effect, signal } from '@angular/core';
-import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
+import { Component, computed, effect, signal } from '@angular/core';
 import { MatIcon } from "@angular/material/icon";
-import { Logo } from "./logo/logo";
+import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { appRoutes } from './app.routes';
+import { AuthService } from './login/service/auth.service';
+import { Logo } from "./logo/logo";
 
 @Component({
   selector: 'app-root',
   imports: [RouterOutlet, MatIcon, Logo, RouterLink, RouterLinkActive],
+  providers: [AuthService],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
 export class App {
+  nomeUser = signal<string | null | undefined>(localStorage.getItem('userName'));
+
+  mostrarMenu = computed(() => this.nomeUser() !== null && this.nomeUser() !== undefined);
+
   menuItems = appRoutes.filter(r => r.data && r.data['title']);
 
   isDarkMode = signal(localStorage.getItem('theme') === 'dark');
@@ -18,7 +24,7 @@ export class App {
   // Armazena a aba/componente que está visível atualmente
   protected readonly componenteAtivo = signal<string>('usuarios');
 
-  constructor() {
+  constructor(public authService: AuthService) {
       // Sincroniza o sinal com a classe do HTML automaticamente
       effect(() => {
         if (this.isDarkMode()) {
@@ -37,6 +43,17 @@ export class App {
       // 2. Salva o novo estado no localStorage para persistir no F5
       localStorage.setItem('theme', nextMode ? 'dark' : 'light');
       return nextMode;
+    });
+  }
+
+ ngOnInit() {
+    this.authService.mostrarMenuEmitter.subscribe((mostrar: boolean) => {
+      if (mostrar) {
+        const usuarioLogado = localStorage.getItem('userName');
+        this.nomeUser.set(usuarioLogado || 'Usuário Logado');
+      } else {
+        this.nomeUser.set(null);
+      }
     });
   }
 }

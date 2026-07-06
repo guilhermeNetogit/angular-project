@@ -1,17 +1,29 @@
+import { MatButtonModule } from '@angular/material/button';
+import { AuthService } from './../login/service/auth.service';
 import { Component, signal } from '@angular/core';
+import { MatIconModule } from "@angular/material/icon";
+import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-home',
-  imports: [],
+  imports: [MatButtonModule, MatIconModule],
   templateUrl: './home.html',
   styleUrl: './home.scss',
 })
 export class Home {
-  nomeUsu: string;
-
   protected readonly title = signal('angular-project');
 
-  constructor () {
-    this.nomeUsu = 'guilherme.neto';
+  constructor (
+    public authService: AuthService,
+    private router: Router
+  ) {}
+
+  sair() {
+    this.authService.fazerLogout();
+  }
+
+  irParaLogin() {
+    this.router.navigate(['/login']);
   }
 }
