@@ -2,13 +2,16 @@ import { Component, computed, effect, signal } from '@angular/core';
 import { MatIcon } from "@angular/material/icon";
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { appRoutes } from './app.routes';
+import { AuthGuard } from './guards/auth.guard';
 import { AuthService } from './login/service/auth.service';
 import { Logo } from "./logo/logo";
+import { UsuariosGuard } from './guards/usuarios.guard';
+import { QuartoGuard } from './guards/quarto.guard';
 
 @Component({
   selector: 'app-root',
   imports: [RouterOutlet, MatIcon, Logo, RouterLink, RouterLinkActive],
-  providers: [AuthService],
+  providers: [AuthService, AuthGuard, UsuariosGuard, QuartoGuard],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })

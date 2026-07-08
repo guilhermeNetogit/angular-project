@@ -1,3 +1,4 @@
+import { inject } from '@angular/core';
 import { Component, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -24,11 +25,7 @@ export class LoginComponent {
     event.stopPropagation();
   }
 
-  constructor (
-    private authService: AuthService
-  ) {
-
-  }
+  authService = inject(AuthService);
 
   fazerLogin() {
     this.authService.fazerLogin(this.user);

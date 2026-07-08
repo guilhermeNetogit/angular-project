@@ -10,7 +10,8 @@
 
     <mat-form-field class="example-full-width">
       <mat-label>Descrição</mat-label>
-      <input matInput name="descricao" [(ngModel)]="testeSelecionado.descricao" placeholder="Ex. Teste...">
+      <input matInput name="descricao" [(ngModel)]="testeSelecionado.descricao" placeholder="Ex. Teste..."
+      (ngModelChange)="onInput()">
     </mat-form-field>
 
     <mat-form-field class="example-full-width">

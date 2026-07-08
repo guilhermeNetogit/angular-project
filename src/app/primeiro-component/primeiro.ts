@@ -1,6 +1,7 @@
-import { Component } from "@angular/core";
+import { Component, inject } from "@angular/core";
 import { MatButtonModule } from '@angular/material/button';
 import { InputProperty } from "../input-property/input-property";
+import { AuthService } from "../login/service/auth.service";
 import { OutputProperty } from "../output-property/output-property";
 
 @Component({
@@ -10,6 +11,9 @@ import { OutputProperty } from "../output-property/output-property";
 })
 
 export class PrimeiroComponent {
+
+  private authService = inject(AuthService);
+
   botaoClicado () {
     alert(`O número atual é: ${this.valorContador}...`);
   }
@@ -19,7 +23,7 @@ export class PrimeiroComponent {
     this.valorContador = evento.novoValor;
   }
 
-  nomeUsuario: string =  'usuario.sa';
+  nomeUsuario = this.authService.usuarioAtual;
 
   valorContador: number = 5;
 }

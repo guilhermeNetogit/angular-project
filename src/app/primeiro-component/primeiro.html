@@ -12,7 +12,7 @@
       <section class="input-output-prop">
         <article>
           <h3>Input / Output Properties</h3>
-          <app-usuario [nome] = 'nomeUsuario'></app-usuario>
+          <app-usuario [nome] = "nomeUsuario() || 'Visitante'"></app-usuario>
 
           <app-contador [valor] ="valorContador" (mudouValor)='onMudouValor($event)'></app-contador>
         </article>

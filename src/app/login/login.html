@@ -2,6 +2,12 @@
 
 <div class="example-container">
 
+  @if (authService.mensagemErro()) {
+      <div class="alert-error">
+        {{ authService.mensagemErro() }}
+      </div>
+    }
+
   <mat-form-field>
     <mat-label>Enter your login</mat-label>
     <input [(ngModel)]="user.login" matInput class="example-left-align"/>

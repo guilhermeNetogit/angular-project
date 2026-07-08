@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
+import { MatActionList, MatListItem } from "@angular/material/list";
 import { ActivatedRoute, Router, RouterLink, RouterOutlet } from '@angular/router';
 import { Quarto, QuartoService } from './services/quarto.service';
-import { MatActionList, MatListItem } from "@angular/material/list";
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-quarto',

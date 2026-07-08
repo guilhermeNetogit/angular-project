@@ -13,18 +13,41 @@ export class AuthService {
 
   mostrarMenu = computed(() => this.usuarioAtual() !== null || this.exibirMenuManual());
 
+  mensagemErro = signal<string | null>(null);
+
   private userAuthenticated: boolean = false;
   mostrarMenuEmitter = new EventEmitter<boolean>();
 
-  constructor(private router: Router) {}
+  private usuariosValidos = [
+    { login: 'guilherme.neto', senha: '123456' },
+    { login: 'guest', senha: '654321' }
+  ];
+
+  userIsAuthenticated() {
+    return this.userAuthenticated;
+  }
+
+  constructor(private router: Router) {
+
+    const usuarioSalvo = sessionStorage.getItem('userName');
+      if (usuarioSalvo) {
+        this.userAuthenticated = true;
+        this.usuarioAtual.set(usuarioSalvo);
+        this.exibirMenuManual.set(true);
+      }
+  }
 
   fazerLogin(user: User) {
-    if (user.login === 'guilherme.neto' &&
-        user.senha === '123456'
-    ) {
+
+    const usuarioEncontrado = this.usuariosValidos.find(
+      u => u.login === user.login && u.senha === user.senha
+    );
+    if (usuarioEncontrado) {
       this.userAuthenticated = true;
 
-      localStorage.setItem('userName', user.login);
+      this.mensagemErro.set(null);
+
+      sessionStorage.setItem('userName', user.login);
       this.usuarioAtual.set(user.login);
 
       this.exibirMenuManual.set(true);
@@ -32,6 +55,7 @@ export class AuthService {
 
       this.router.navigate(['/']);
     } else {
+      this.mensagemErro.set('Login ou senha inválidos!');
       this.fazerLogout();
     }
   }
@@ -40,7 +64,7 @@ export class AuthService {
     this.userAuthenticated = false;
 
     // 1. Limpa o nome salvo no navegador
-    localStorage.removeItem('userName');
+    sessionStorage.removeItem('userName');
 
     // 2. Reseta os sinais para sumir com o nome e com o menu na hora
     this.usuarioAtual.set(null);

@@ -16,6 +16,8 @@ export class QuartoForm {
 
   testeSelecionado?: Quarto;
 
+  private formMudou: boolean = false;
+
   constructor(
     private quartoService: QuartoService,
     private route: ActivatedRoute
@@ -27,14 +29,43 @@ export class QuartoForm {
       this.id = params.get('id') ?? undefined;
 
       if (this.id) {
-        const idNumero = Number(this.id);
-        // Busca o quarto correspondente
-        this.testeSelecionado = this.quartoService.getAll().find((quarto) => quarto.id === idNumero);
+  const idNumero = Number(this.id);
+  const quartoOriginal = this.quartoService.getAll().find((quarto) => quarto.id === idNumero);
 
-        if (this.testeSelecionado === undefined) {
-          this.testeSelecionado = undefined;
-        }
-      }
+  if (quartoOriginal) {
+    this.testeSelecionado = structuredClone(quartoOriginal);
+  } else {
+    this.testeSelecionado = undefined;
+  }
+}
     });
   }
+
+  onInput() {
+    this.formMudou = true;
+    console.log('mudou');
+  }
+
+  podeMudarRota(): boolean {
+  if (this.formMudou && this.testeSelecionado) {
+    const desejaSalvar = confirm(
+      'Você fez alterações! Deseja SALVAR antes de sair?\n\n' +
+      '[OK] = Salvar e Sair\n' +
+      '[Cancelar] = Descartar e Sair'
+    );
+
+    if (desejaSalvar) {
+      // Salva no serviço as alterações feitas no clone
+      this.quartoService.update(this.testeSelecionado);
+      alert('Alterações salvas com sucesso!');
+    } else {
+      alert('Alterações descartadas.');
+    }
+
+    this.formMudou = false; // Reseta o estado do formulário
+    return true; // Permite sair da página
+  }
+
+  return true; // Se o formulário não mudou, sai direto sem perguntar
+}
 }
