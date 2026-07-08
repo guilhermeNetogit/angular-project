@@ -4,6 +4,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { ActivatedRoute } from '@angular/router';
 import { Quarto, QuartoService } from '../services/quarto.service';
+import { FormDeactivate } from '../../guards/form-deactivate.guard';
 
 @Component({
   selector: 'app-quarto-form',
@@ -11,7 +12,7 @@ import { Quarto, QuartoService } from '../services/quarto.service';
   templateUrl: './quarto-form.html',
   styleUrl: './quarto-form.scss',
 })
-export class QuartoForm {
+export class QuartoForm implements FormDeactivate {
   @Input() id?: string;
 
   testeSelecionado?: Quarto;
@@ -67,5 +68,8 @@ export class QuartoForm {
   }
 
   return true; // Se o formulário não mudou, sai direto sem perguntar
+}
+podeDesativar() {
+  return this.podeMudarRota();
 }
 }

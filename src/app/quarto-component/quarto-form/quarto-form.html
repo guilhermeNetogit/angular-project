@@ -16,7 +16,8 @@
 
     <mat-form-field class="example-full-width">
       <mat-label>Resumo</mat-label>
-      <textarea matInput name="resumo" [(ngModel)]="testeSelecionado.resumo" placeholder="Ex. Problema de lógica..."></textarea>
+      <textarea matInput name="resumo" [(ngModel)]="testeSelecionado.resumo" placeholder="Ex. Problema de lógica..."
+      (ngModelChange)="onInput()"></textarea>
     </mat-form-field>
 
   </form>
