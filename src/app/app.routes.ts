@@ -30,7 +30,8 @@ export const appRoutes: Routes = [
   { path: 'quarto',
     loadChildren: () => import('./quarto-component/quarto.routing').then(m => m.quartoRoutes),
     data: {title: 'Fourth Module'},
-    canActivate: [AuthGuard] },
+    canActivate: [AuthGuard],
+    canActivateChild: [UsuariosGuard] },
   //{ path: 'curso/:id', component: UsuariosDetalhe }
 ];
 

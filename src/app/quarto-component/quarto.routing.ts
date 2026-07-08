@@ -4,6 +4,7 @@ import { QuartoComponent } from './quarto';
 import { QuartoDetalhe } from './quarto-detalhe/quarto-detalhe';
 import { QuartoForm } from './quarto-form/quarto-form';
 import { QuartoGuard } from '../guards/quarto.guard';
+import { QuartoDeactivateGuard } from '../guards/quarto-deactivate.guard';
 
 export const quartoRoutes: Routes = [
   {
@@ -13,7 +14,9 @@ export const quartoRoutes: Routes = [
     children: [
       { path: 'new', component: QuartoForm },
       { path: ':id', component: QuartoDetalhe },
-      { path: ':id/edit', component: QuartoForm },
+      { path: ':id/edit', component: QuartoForm,
+        canDeactivate: [QuartoDeactivateGuard]
+       },
     ],
   },
 ];

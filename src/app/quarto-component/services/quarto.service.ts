@@ -21,4 +21,11 @@ export class QuartoService {
   getAll(): Quarto[] {
     return this.quartos;
   }
+
+  update(quartoAtualizado: Quarto) {
+    const index = this.quartos.findIndex(q => q.id === quartoAtualizado.id);
+    if (index !== -1) {
+      this.quartos[index] = quartoAtualizado;
+    }
+  }
 }

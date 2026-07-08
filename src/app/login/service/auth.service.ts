@@ -20,7 +20,7 @@ export class AuthService {
 
   private usuariosValidos = [
     { login: 'guilherme.neto', senha: '123456' },
-    { login: 'usuario.guest', senha: '654321' }
+    { login: 'guest', senha: '654321' }
   ];
 
   userIsAuthenticated() {
@@ -29,7 +29,7 @@ export class AuthService {
 
   constructor(private router: Router) {
 
-    const usuarioSalvo = localStorage.getItem('userName');
+    const usuarioSalvo = sessionStorage.getItem('userName');
       if (usuarioSalvo) {
         this.userAuthenticated = true;
         this.usuarioAtual.set(usuarioSalvo);
@@ -47,7 +47,7 @@ export class AuthService {
 
       this.mensagemErro.set(null);
 
-      localStorage.setItem('userName', user.login);
+      sessionStorage.setItem('userName', user.login);
       this.usuarioAtual.set(user.login);
 
       this.exibirMenuManual.set(true);
@@ -64,7 +64,7 @@ export class AuthService {
     this.userAuthenticated = false;
 
     // 1. Limpa o nome salvo no navegador
-    localStorage.removeItem('userName');
+    sessionStorage.removeItem('userName');
 
     // 2. Reseta os sinais para sumir com o nome e com o menu na hora
     this.usuarioAtual.set(null);
