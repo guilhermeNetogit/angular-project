@@ -13,16 +13,39 @@ export class AuthService {
 
   mostrarMenu = computed(() => this.usuarioAtual() !== null || this.exibirMenuManual());
 
+  mensagemErro = signal<string | null>(null);
+
   private userAuthenticated: boolean = false;
   mostrarMenuEmitter = new EventEmitter<boolean>();
 
-  constructor(private router: Router) {}
+  private usuariosValidos = [
+    { login: 'guilherme.neto', senha: '123456' },
+    { login: 'usuario.guest', senha: '654321' }
+  ];
+
+  userIsAuthenticated() {
+    return this.userAuthenticated;
+  }
+
+  constructor(private router: Router) {
+
+    const usuarioSalvo = localStorage.getItem('userName');
+      if (usuarioSalvo) {
+        this.userAuthenticated = true;
+        this.usuarioAtual.set(usuarioSalvo);
+        this.exibirMenuManual.set(true);
+      }
+  }
 
   fazerLogin(user: User) {
-    if (user.login === 'guilherme.neto' &&
-        user.senha === '123456'
-    ) {
+
+    const usuarioEncontrado = this.usuariosValidos.find(
+      u => u.login === user.login && u.senha === user.senha
+    );
+    if (usuarioEncontrado) {
       this.userAuthenticated = true;
+
+      this.mensagemErro.set(null);
 
       localStorage.setItem('userName', user.login);
       this.usuarioAtual.set(user.login);
@@ -32,6 +55,7 @@ export class AuthService {
 
       this.router.navigate(['/']);
     } else {
+      this.mensagemErro.set('Login ou senha inválidos!');
       this.fazerLogout();
     }
   }
