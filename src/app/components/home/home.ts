@@ -1,5 +1,5 @@
 import { MatButtonModule } from '@angular/material/button';
-import { AuthService } from './../login/service/auth.service';
+import { AuthService } from '../login/service/auth.service';
 import { Component, signal } from '@angular/core';
 import { MatIconModule } from "@angular/material/icon";
 import { Router } from '@angular/router';

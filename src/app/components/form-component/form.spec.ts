@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TerceiroComponent } from './terceiro';
+import { TerceiroComponent } from './form';
 
 describe('TerceiroComponent', () => {
   let component: TerceiroComponent;

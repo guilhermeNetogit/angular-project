@@ -4,7 +4,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { ActivatedRoute } from '@angular/router';
 import { Quarto, QuartoService } from '../services/quarto.service';
-import { FormDeactivate } from '../../guards/form-deactivate.guard';
+import { FormDeactivate } from '../../../guards/form-deactivate.guard';
 
 @Component({
   selector: 'app-quarto-form',
