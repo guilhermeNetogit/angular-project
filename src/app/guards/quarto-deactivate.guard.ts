@@ -1,20 +1,21 @@
-import { Injectable, NgModule } from '@angular/core';
-import { ActivatedRouteSnapshot, CanDeactivate, GuardResult, MaybeAsync, RouterModule, RouterStateSnapshot } from '@angular/router';
-import { QuartoForm } from '../quarto-component/quarto-form/quarto-form';
+import { Injectable } from '@angular/core';
+import { ActivatedRouteSnapshot, CanDeactivate, GuardResult, MaybeAsync, RouterStateSnapshot } from '@angular/router';
+import { FormDeactivate } from './form-deactivate.guard';
 
 @Injectable({
   providedIn: 'root'
 })
-export class QuartoDeactivateGuard implements CanDeactivate<QuartoForm> {
+export class QuartoDeactivateGuard implements CanDeactivate<FormDeactivate> {
 
   canDeactivate(
-    component: QuartoForm,
+    component: FormDeactivate,
     currentRoute: ActivatedRouteSnapshot,
     currentState: RouterStateSnapshot,
     nextState: RouterStateSnapshot,
   ): MaybeAsync<GuardResult> {
     console;console.log('guarda de desativação!');
 
-    return component.podeMudarRota();
+    //return component.podeMudarRota();
+    return component.podeDesativar();
   }
 }

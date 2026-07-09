@@ -53,7 +53,7 @@ export class AuthService {
       this.exibirMenuManual.set(true);
       this.mostrarMenuEmitter.emit(true);
 
-      this.router.navigate(['/']);
+      this.router.navigate(['/home']);
     } else {
       this.mensagemErro.set('Login ou senha inválidos!');
       this.fazerLogout();
