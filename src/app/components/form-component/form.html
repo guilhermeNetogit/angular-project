@@ -1,0 +1,27 @@
+<form [formGroup]="formulario" (ngSubmit)="enviarDados()">
+
+  <!-- Campo Nome -->
+  <mat-form-field class="field">
+    <mat-label for="nome">Nome:</mat-label>
+    <input matInput id="nome" type="text" formControlName="nome">
+
+    <!-- Nova sintaxe de controle de fluxo do Angular -->
+    @if (formulario.get('nome')?.touched && formulario.get('nome')?.errors?.['required']) {
+      <mat-error>O nome é obrigatório.</mat-error>
+    }
+  </mat-form-field>
+
+  <!-- Campo E-mail -->
+  <mat-form-field class="field" appearance="fill">
+    <mat-label>E-mail:</mat-label>
+    <!-- Adicionado matInput -->
+    <input matInput id="email" type="email" formControlName="email">
+
+    @if (formulario.get('email')?.touched && formulario.get('email')?.errors?.['email']) {
+      <mat-error>Insira um e-mail válido.</mat-error>
+    }
+  </mat-form-field>
+
+  <button type="submit" [disabled]="formulario.invalid">Enviar</button>
+
+</form>

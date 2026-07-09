@@ -1,0 +1,27 @@
+/* 1. Altera a largura do campo de nome */
+.field {
+  width: 100%;
+}
+
+/* 2. Força a nova altura no bloco interno (Modo Geral ou Específico usando ::ng-deep) */
+.field ::ng-deep .mat-mdc-text-field-wrapper {
+  height: 45px !important;     /* Define a altura exata desejada */
+  min-height: 45px !important; /* Evita que o Material force o tamanho padrão de 56px */
+}
+
+/* 3. Ajusta o alinhamento do texto e da label para ficarem centralizados com a nova altura */
+.field ::ng-deep .mat-mdc-form-field-flex {
+  height: 100% !important;
+  align-items: center !important; /* Centraliza verticalmente o input */
+}
+
+/* 4. Ajusta a posição da Label flutuante para não sumir com a nova altura */
+.field ::ng-deep .mdc-floating-label {
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+}
+
+/* Caso a label flutue e fique cortada no topo, este ajuste resolve: */
+.field ::ng-deep .mdc-floating-label--float-above {
+  transform: translateY(-110%) scale(0.75) !important;
+}

@@ -1,23 +1,24 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { FormComponent } from './components/form-component/form';
 import { authGuard } from './guards/auth.guard';
 import { UsuariosGuard } from './guards/usuarios.guard';
-import { Home } from './home/home';
-import { LoginComponent } from './login/login';
-import { PageNotFoundComponent } from './pages/page-not-found/page-not-found';
-import { Pipes } from './pipes/pipes';
-import { PrimeiroComponent } from './primeiro-component/primeiro';
-import { SegundoComponent } from './segundo-component/segundo';
-import { TerceiroComponent } from './terceiro-component/terceiro';
+import { Home } from './components/home/home';
+import { LoginComponent } from './components/login/login';
+import { PageNotFoundComponent } from './components/pages/page-not-found/page-not-found';
+import { Pipes } from './components/pipes/pipes';
+import { PrimeiroComponent } from './components/primeiro-component/primeiro';
+import { SegundoComponent } from './components/segundo-component/segundo';
 //import { Usuarios } from './usuarios/usuarios';
 //import { UsuariosDetalhe } from './usuarios/usuarios-detalhe/usuarios-detalhe';
 
 export const appRoutes: Routes = [
+  { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: 'home', component: Home, data: { title: 'Home' } },
   { path: 'login', component: LoginComponent, data: { skipMenu: true } },
   {
     path: 'usuarios',
-    loadChildren: () => import('./usuarios/usuarios.routing').then((m) => m.usuariosRoutes),
+    loadChildren: () => import('./components/usuarios/usuarios.routing').then((m) => m.usuariosRoutes),
     data: { title: 'Users Module' },
     canMatch: [authGuard],
     canActivateChild: [UsuariosGuard],
@@ -36,17 +37,17 @@ export const appRoutes: Routes = [
     canMatch: [authGuard],
   },
   {
-    path: 'terceiro',
-    component: TerceiroComponent,
-    data: { title: 'Third Module' },
-    canMatch: [authGuard],
-  },
-  {
     path: 'quarto',
-    loadChildren: () => import('./quarto-component/quarto.routing').then((m) => m.quartoRoutes),
+    loadChildren: () => import('./components/quarto-component/quarto.routing').then((m) => m.quartoRoutes),
     data: { title: 'Fourth Module' },
     canMatch: [authGuard],
     canActivateChild: [UsuariosGuard],
+  },
+  {
+    path: 'form',
+    component: FormComponent,
+    data: { title: 'Form Module' },
+    canMatch: [authGuard],
   },
   { path: '404', component: PageNotFoundComponent },
   { path: '**', redirectTo: '/404' },

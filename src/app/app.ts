@@ -1,16 +1,16 @@
 import { Component, computed, effect, signal } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
 import { MatIcon } from "@angular/material/icon";
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { appRoutes } from './app.routes';
-import { authGuard } from './guards/auth.guard';
-import { AuthService } from './login/service/auth.service';
-import { Logo } from "./logo/logo";
-import { UsuariosGuard } from './guards/usuarios.guard';
+import { AuthService } from './components/login/service/auth.service';
+import { Logo } from "./components/logo/logo";
 import { QuartoGuard } from './guards/quarto.guard';
+import { UsuariosGuard } from './guards/usuarios.guard';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, MatIcon, Logo, RouterLink, RouterLinkActive],
+  imports: [Logo, MatIcon, ReactiveFormsModule, RouterOutlet, RouterLink, RouterLinkActive],
   providers: [AuthService, UsuariosGuard, QuartoGuard],
   templateUrl: './app.html',
   styleUrl: './app.scss'

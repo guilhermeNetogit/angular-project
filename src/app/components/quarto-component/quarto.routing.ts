@@ -3,8 +3,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { QuartoComponent } from './quarto';
 import { QuartoDetalhe } from './quarto-detalhe/quarto-detalhe';
 import { QuartoForm } from './quarto-form/quarto-form';
-import { QuartoGuard } from '../guards/quarto.guard';
-import { QuartoDeactivateGuard } from '../guards/quarto-deactivate.guard';
+import { QuartoGuard } from '../../guards/quarto.guard';
+import { QuartoDeactivateGuard } from '../../guards/quarto-deactivate.guard';
 import { QuartoDetalheResolver } from './guards/quarto-detalhe.resolver';
 
 export const quartoRoutes: Routes = [
