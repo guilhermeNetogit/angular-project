@@ -34,56 +34,68 @@
     </mat-form-field>
   </div>
 
-  <!-- Linha dividida: CEP e Endereço -->
-  <div class="form-row">
-    <mat-form-field class="field w-30">
-      <mat-label>CEP</mat-label>
-      <input matInput type="number" formControlName="cep" #postalCode maxlength="8" placeholder="ex. 01001000">
-      <mat-hint align="end">{{postalCode.value.length}} / 8</mat-hint>
-    </mat-form-field>
-
-    <mat-form-field class="field w-70">
-      <mat-label>Logradouro/Nome</mat-label>
-      <input matInput type="text" formControlName="logradouro" placeholder="ex. Praça da Sé">
-    </mat-form-field>
+  <div>
+    <mat-form-field class="field w-50">
+    <mat-label>Telefone</mat-label>
+    <span matTextPrefix>{{ formulario.get('ddd')?.value }} &nbsp;</span>
+    <input type="tel" formControlName="telefone" matInput placeholder="555-555-1234">
+  </mat-form-field>
   </div>
 
-  <!-- Linha dividida: Cidade e UF -->
-  <div class="form-row">
-    <mat-form-field class="field w-70">
-      <mat-label>Bairro</mat-label>
-      <input matInput type="text" formControlName="bairro" placeholder="ex. Sé">
-    </mat-form-field>
+  <div formGroupName="endereco">
+    <!-- Linha dividida: CEP e Endereço -->
+    <div class="form-row">
+      <mat-form-field class="field w-30">
+        <mat-label>CEP</mat-label>
+        <input matInput type="text" formControlName="cep" #postalCode maxlength="9" placeholder="ex. 01001000"
+          (input)="aplicarMascaraCep($event)" (blur)="buscarCep()">
+        <mat-hint align="end">{{postalCode.value.length}} / 9</mat-hint>
+        @if (formulario.get('endereco.cep')?.value && formulario.get('endereco.cep')?.errors?.['pattern']) {
+        <mat-error>Formato inválido (ex: 01001-000).</mat-error>
+        }
+      </mat-form-field>
 
-    <mat-form-field class="field w-30">
-      <mat-label>Número</mat-label>
-      <input matInput type="number" formControlName="numero" #numero maxlength="10">
-      <mat-hint align="end">{{numero.value.length}} / 10</mat-hint>
-    </mat-form-field>
-  </div>
+      <mat-form-field class="field w-70">
+        <mat-label>Logradouro/Nome</mat-label>
+        <input matInput type="text" formControlName="logradouro" placeholder="ex. Praça da Sé">
+      </mat-form-field>
+    </div>
 
-  <div class="form-row">
-    <mat-form-field class="field full-width">
-      <mat-label>Complemento:</mat-label>
-      <input matInput type="text" formControlName="complemento" #complemento id="complemento" type="text" maxlength="50">
-      <mat-hint align="end">{{complemento.value.length}} / 50</mat-hint>
+    <div class="form-row">
+      <mat-form-field class="field w-70">
+        <mat-label>Bairro</mat-label>
+        <input matInput type="text" formControlName="bairro" placeholder="ex. Sé">
+      </mat-form-field>
+      <mat-form-field class="field w-30">
+        <mat-label>Número</mat-label>
+        <input matInput type="number" formControlName="numero" #numero maxlength="10">
+        <mat-hint align="end">{{numero.value.length}} / 10</mat-hint>
+      </mat-form-field>
+    </div>
 
-      @if (formulario.get('complemento')?.errors?.['maxlength']) {
-      <mat-error>O complemento deve ter no máximo 50 caracteres.</mat-error>
-      }
-    </mat-form-field>
-  </div>
+    <div class="form-row">
+      <mat-form-field class="field full-width">
+        <mat-label>Complemento:</mat-label>
+        <input matInput type="text" formControlName="complemento" #complemento id="complemento" type="text"
+          maxlength="50">
+        <mat-hint align="end">{{complemento.value.length}} / 50</mat-hint>
+        @if (formulario.get('endereco.complemento')?.errors?.['maxlength']) {
+        <mat-error>O complemento deve ter no máximo 50 caracteres.</mat-error>
+        }
+      </mat-form-field>
+    </div>
 
-  <div class="form-row">
-    <mat-form-field class="field w-80">
-      <mat-label>Cidade</mat-label>
-      <input matInput type="text" formControlName="cidade" placeholder="ex. São Paulo">
-    </mat-form-field>
-
-    <mat-form-field class="field w-20 text-uppercase">
-      <mat-label>UF</mat-label>
-      <input matInput formControlName="uf" oninput="this.value = this.value.toUpperCase()" maxlength="2" placeholder="ex. SP">
-    </mat-form-field>
+    <div class="form-row">
+      <mat-form-field class="field w-80">
+        <mat-label>Cidade</mat-label>
+        <input matInput type="text" formControlName="cidade" placeholder="ex. São Paulo">
+      </mat-form-field>
+      <mat-form-field class="field w-20 text-uppercase">
+        <mat-label>UF</mat-label>
+        <input matInput formControlName="uf" oninput="this.value = this.value.toUpperCase()" maxlength="2"
+          placeholder="ex. SP">
+      </mat-form-field>
+    </div>
   </div>
 
   <!-- Botões -->
