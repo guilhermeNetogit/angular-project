@@ -1,18 +1,17 @@
-/* Container principal do formulário */
+
 .form {
   min-width: 150px;
   max-width: 600px;
   width: 445px;
   display: flex;
   flex-direction: column;
-  gap: 5px; /* Cria espaço vertical automático entre as linhas */
+  gap: 5px;
 }
 
-/* Nova classe para controlar as linhas do formulário */
 .form-row {
   display: flex;
   width: 100%;
-  gap: 8px; /* Cria espaço horizontal automático entre os campos da mesma linha */
+  gap: 8px;
 }
 
 /* Configuração base dos campos */

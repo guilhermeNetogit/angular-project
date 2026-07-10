@@ -1,9 +1,17 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatFormFieldModule, MatLabel } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { HttpClient } from '@angular/common/http';
+import { merge } from 'rxjs';
+import { ErrorStateMatcher } from '@angular/material/core';
+
+export class ImmediateErrorStateMatcher implements ErrorStateMatcher {
+  isErrorState(control: FormControl | null): boolean {
+    return !!(control && control.invalid);
+  }
+}
 
 @Component({
   selector: 'app-form',
@@ -14,6 +22,7 @@ import { HttpClient } from '@angular/common/http';
 })
 export class FormComponent implements OnInit {
   formulario!: FormGroup;
+  matcherImediato = new ImmediateErrorStateMatcher();
   private urlApi = 'https://httpbin.org/post';
 
   constructor(
@@ -37,6 +46,8 @@ export class FormComponent implements OnInit {
         uf: [''],
       }),
     });
+
+    this.configurarValidacaoNumero();
   }
 
   aplicarMascaraCep(event: Event): void {
@@ -80,6 +91,7 @@ export class FormComponent implements OnInit {
       });
     }
   }
+
   private resetarDadosForm(): void {
     this.formulario.get('endereco')?.patchValue({
       logradouro: '',
@@ -88,6 +100,30 @@ export class FormComponent implements OnInit {
       cidade: '',
       uf: '',
     });
+  }
+
+  private configurarValidacaoNumero(): void {
+    const cepControl = this.formulario.get('endereco.cep');
+    const logradouroControl = this.formulario.get('endereco.logradouro');
+    const numeroControl = this.formulario.get('endereco.numero');
+
+    if (cepControl && logradouroControl && numeroControl) {
+      // O 'merge' vai escutar as mudanças tanto no CEP quanto no Logradouro
+      merge(cepControl.valueChanges, logradouroControl.valueChanges).subscribe(() => {
+        const temCep = !!cepControl.value?.trim();
+        const temLogradouro = !!logradouroControl.value?.trim();
+
+        // Condição: Se pelo menos um estiver preenchido
+        if (temCep || temLogradouro) {
+          numeroControl.setValidators([Validators.required]);
+        } else {
+          numeroControl.clearValidators();
+        }
+
+        // Atualiza o estado visual e a validação do campo sem disparar eventos infinitos
+        numeroControl.updateValueAndValidity({ emitEvent: false });
+      });
+    }
   }
 
   enviarDados(): void {

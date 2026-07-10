@@ -36,10 +36,10 @@
 
   <div>
     <mat-form-field class="field w-50">
-    <mat-label>Telefone</mat-label>
-    <span matTextPrefix>{{ formulario.get('ddd')?.value }} &nbsp;</span>
-    <input type="tel" formControlName="telefone" matInput placeholder="555-555-1234">
-  </mat-form-field>
+      <mat-label>Telefone</mat-label>
+      <span matTextPrefix>{{ formulario.get('ddd')?.value }} &nbsp;</span>
+      <input type="tel" formControlName="telefone" matInput placeholder="555-555-1234">
+    </mat-form-field>
   </div>
 
   <div formGroupName="endereco">
@@ -66,10 +66,16 @@
         <mat-label>Bairro</mat-label>
         <input matInput type="text" formControlName="bairro" placeholder="ex. Sé">
       </mat-form-field>
+
       <mat-form-field class="field w-30">
         <mat-label>Número</mat-label>
-        <input matInput type="number" formControlName="numero" #numero maxlength="10">
+        <input matInput type="number" formControlName="numero" #numero maxlength="10"
+          [errorStateMatcher]="matcherImediato">
         <mat-hint align="end">{{numero.value.length}} / 10</mat-hint>
+
+        @if (formulario.get('endereco.numero')?.errors?.['required']) {
+        <mat-error>*Obrigatório!</mat-error>
+        }
       </mat-form-field>
     </div>
 
