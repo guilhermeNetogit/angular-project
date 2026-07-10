@@ -1,3 +1,5 @@
+<h3>Novo Cadastro</h3>
+
 <form [formGroup]="formulario" (ngSubmit)="enviarDados()">
 
   <!-- Campo Nome -->
@@ -22,6 +24,15 @@
     }
   </mat-form-field>
 
-  <button type="submit" [disabled]="formulario.invalid">Enviar</button>
+  <section>
+    <div class="submit-button-row">
+      <div class="submit-flex-container">
+        <button matFab extended type="submit" [disabled]="formulario.invalid">Enviar
+        </button>
+        <button matFab extended type="reset" class="btn-cancelar">Cancelar
+        </button>
+      </div>
+    </div>
+  </section>
 
 </form>

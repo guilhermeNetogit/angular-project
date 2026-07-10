@@ -25,3 +25,38 @@
 .field ::ng-deep .mdc-floating-label--float-above {
   transform: translateY(-110%) scale(0.75) !important;
 }
+
+section {
+  display: flex;
+  align-items: center;
+}
+.submit-button-row {
+  max-width: 600px;
+}
+
+.submit-button-row .mat-mdc-button-base {
+  margin: 4px 4px 4px 0;
+}
+
+.submit-flex-container ::ng-deep .mat-mdc-extended-fab {
+  height: 32px !important;
+  min-width: 80px !important;
+  padding: 0 16px !important;
+  border-radius: 5px;
+}
+
+.submit-flex-container ::ng-deep .mat-mdc-extended-fab .mdc-button__label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.submit-flex-container button + button {
+  margin-left: 12px;
+}
+
+.btn-cancelar {
+  background-color: #e0e0e0 !important;
+  color: #333333 !important;
+  box-shadow: none !important;
+}
