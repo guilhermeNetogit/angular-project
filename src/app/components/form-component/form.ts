@@ -23,8 +23,19 @@ export class FormComponent implements OnInit {
 
   ngOnInit() {
     this.formulario = this.formBuilder.group({
-      nome: ['', [Validators.required, Validators.minLength(3)]],
+      nome: ['', [Validators.required, Validators.minLength(3),
+      Validators.maxLength(50)
+      ]],
       email: ['', [Validators.required, Validators.email]],
+      //endereco: {
+        cep: ['',[Validators.maxLength(8)]],
+        numero: [''],
+        complemento: [''],
+        logradouro: [''],
+        bairro: [''],
+        cidade: [''],
+        uf: ['']
+     // }
     });
   }
 
