@@ -7,11 +7,12 @@ import { AuthService } from './components/login/service/auth.service';
 import { Logo } from "./components/logo/logo";
 import { QuartoGuard } from './guards/quarto.guard';
 import { UsuariosGuard } from './guards/usuarios.guard';
+import { DropdownService } from './shared/services/dropdown.service';
 
 @Component({
   selector: 'app-root',
   imports: [Logo, MatIcon, ReactiveFormsModule, RouterOutlet, RouterLink, RouterLinkActive],
-  providers: [AuthService, UsuariosGuard, QuartoGuard],
+  providers: [AuthService, DropdownService, UsuariosGuard, QuartoGuard],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })

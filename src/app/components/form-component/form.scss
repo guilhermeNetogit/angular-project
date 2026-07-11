@@ -1,60 +1,70 @@
-/* 1. Altera a largura do campo de nome */
-.field {
+
+.form {
+  min-width: 150px;
+  max-width: 600px;
+  width: 445px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.form-row {
+  display: flex;
   width: 100%;
+  gap: 8px;
 }
 
-/* 2. Força a nova altura no bloco interno (Modo Geral ou Específico usando ::ng-deep) */
+/* Configuração base dos campos */
+.field {
+  width: 100%; /* Por padrão ocupam tudo, a linha controla a divisão */
+}
+
+/* Classes utilitárias de proporção (Substituem os cálculos em px) */
+.full-width { flex: 1 1 100%; }
+.w-80       { flex: 1 1 80%; }
+.w-70       { flex: 1 1 70%; }
+.w-60       { flex: 1 1 60%; }
+.w-50       { flex: 1 1 50%; }
+.w-40       { flex: 1 1 40%; }
+.w-30       { flex: 1 1 30%; }
+.w-20       { flex: 1 1 20%; }
+
+/* Mantém sua estilização customizada de altura do Angular Material */
 .field ::ng-deep .mat-mdc-text-field-wrapper {
-  height: 45px !important;     /* Define a altura exata desejada */
-  min-height: 45px !important; /* Evita que o Material force o tamanho padrão de 56px */
+  height: 45px !important;
+  min-height: 45px !important;
 }
-
-/* 3. Ajusta o alinhamento do texto e da label para ficarem centralizados com a nova altura */
 .field ::ng-deep .mat-mdc-form-field-flex {
   height: 100% !important;
-  align-items: center !important; /* Centraliza verticalmente o input */
+  align-items: center !important;
 }
-
-/* 4. Ajusta a posição da Label flutuante para não sumir com a nova altura */
 .field ::ng-deep .mdc-floating-label {
   top: 50% !important;
   transform: translateY(-50%) !important;
 }
-
-/* Caso a label flutue e fique cortada no topo, este ajuste resolve: */
 .field ::ng-deep .mdc-floating-label--float-above {
   transform: translateY(-110%) scale(0.75) !important;
 }
 
-section {
-  display: flex;
-  align-items: center;
+/* Utilitários extras */
+.text-uppercase input {
+  text-transform: uppercase;
 }
+
+/* Ajuste dos botões */
 .submit-button-row {
-  max-width: 600px;
+  width: 100%;
 }
-
-.submit-button-row .mat-mdc-button-base {
-  margin: 4px 4px 4px 0;
+.submit-flex-container {
+  display: flex;
+  gap: 12px;
 }
-
 .submit-flex-container ::ng-deep .mat-mdc-extended-fab {
   height: 32px !important;
   min-width: 80px !important;
   padding: 0 16px !important;
   border-radius: 5px;
 }
-
-.submit-flex-container ::ng-deep .mat-mdc-extended-fab .mdc-button__label {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.submit-flex-container button + button {
-  margin-left: 12px;
-}
-
 .btn-cancelar {
   background-color: #e0e0e0 !important;
   color: #333333 !important;

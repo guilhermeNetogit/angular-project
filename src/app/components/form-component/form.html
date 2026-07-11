@@ -1,36 +1,115 @@
 <h3>Novo Cadastro</h3>
 
-<form [formGroup]="formulario" (ngSubmit)="enviarDados()">
+<form class="form" [formGroup]="formulario" (ngSubmit)="enviarDados()">
 
-  <!-- Campo Nome -->
-  <mat-form-field class="field">
-    <mat-label for="nome">Nome:</mat-label>
-    <input matInput id="nome" type="text" formControlName="nome">
+  <!-- Linha com 1 campo cheia (Nome) -->
+  <div class="form-row">
+    <mat-form-field class="field full-width">
+      <mat-label for="nome">Nome:</mat-label>
+      <input matInput #nome id="nome" type="text" formControlName="nome" maxlength="50">
+      <mat-hint align="end">{{nome.value.length}} / 50</mat-hint>
 
-    <!-- Nova sintaxe de controle de fluxo do Angular -->
-    @if (formulario.get('nome')?.touched && formulario.get('nome')?.errors?.['required']) {
+      @if (formulario.get('nome')?.touched && formulario.get('nome')?.errors?.['required']) {
       <mat-error>O nome é obrigatório.</mat-error>
-    }
-  </mat-form-field>
+      }
+      @if (formulario.get('nome')?.errors?.['minlength']) {
+      <mat-error>O nome deve ter no mínimo 3 caracteres.</mat-error>
+      }
+    </mat-form-field>
+  </div>
 
-  <!-- Campo E-mail -->
-  <mat-form-field class="field" appearance="fill">
-    <mat-label>E-mail:</mat-label>
-    <!-- Adicionado matInput -->
-    <input matInput id="email" type="email" formControlName="email">
+  <!-- Linha com 1 campo cheia (Email) -->
+  <div class="form-row">
+    <mat-form-field class="field full-width" appearance="fill">
+      <mat-label>E-mail:</mat-label>
+      <input matInput id="email" type="email" formControlName="email" placeholder="exemplo@email.com">
 
-    @if (formulario.get('email')?.touched && formulario.get('email')?.errors?.['email']) {
+      @if (formulario.get('email')?.touched && formulario.get('email')?.errors?.['required']) {
+      <mat-error>O email é obrigatório.</mat-error>
+      }
+
+      @if (formulario.get('email')?.touched && formulario.get('email')?.errors?.['email']) {
       <mat-error>Insira um e-mail válido.</mat-error>
-    }
-  </mat-form-field>
+      }
+    </mat-form-field>
+  </div>
 
-  <section>
+  <div>
+    <mat-form-field class="field w-50">
+      <mat-label>Telefone</mat-label>
+      <span matTextPrefix>{{ formulario.get('ddd')?.value }} &nbsp;</span>
+      <input type="tel" formControlName="telefone" matInput placeholder="555-555-1234">
+    </mat-form-field>
+  </div>
+
+  <div formGroupName="endereco">
+    <!-- Linha dividida: CEP e Endereço -->
+    <div class="form-row">
+      <mat-form-field class="field w-30">
+        <mat-label>CEP</mat-label>
+        <input matInput type="text" formControlName="cep" #postalCode maxlength="9" placeholder="ex. 01001000"
+          (input)="aplicarMascaraCep($event)" (blur)="buscarCep()">
+        <mat-hint align="end">{{postalCode.value.length}} / 9</mat-hint>
+        @if (formulario.get('endereco.cep')?.value && formulario.get('endereco.cep')?.errors?.['pattern']) {
+        <mat-error>Formato inválido (ex: 01001-000).</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field class="field w-70">
+        <mat-label>Logradouro/Nome</mat-label>
+        <input matInput type="text" formControlName="logradouro" placeholder="ex. Praça da Sé">
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field class="field w-70">
+        <mat-label>Bairro</mat-label>
+        <input matInput type="text" formControlName="bairro" placeholder="ex. Sé">
+      </mat-form-field>
+
+      <mat-form-field class="field w-30">
+        <mat-label>Número</mat-label>
+        <input matInput type="number" formControlName="numero" #numero maxlength="10"
+          [errorStateMatcher]="matcherImediato">
+        <mat-hint align="end">{{numero.value.length}} / 10</mat-hint>
+
+        @if (formulario.get('endereco.numero')?.errors?.['required']) {
+        <mat-error>*Obrigatório!</mat-error>
+        }
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field class="field full-width">
+        <mat-label>Complemento:</mat-label>
+        <input matInput type="text" formControlName="complemento" #complemento id="complemento" type="text"
+          maxlength="50">
+        <mat-hint align="end">{{complemento.value.length}} / 50</mat-hint>
+        @if (formulario.get('endereco.complemento')?.errors?.['maxlength']) {
+        <mat-error>O complemento deve ter no máximo 50 caracteres.</mat-error>
+        }
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field class="field w-80">
+        <mat-label>Cidade</mat-label>
+        <input matInput type="text" formControlName="cidade" placeholder="ex. São Paulo">
+      </mat-form-field>
+      <mat-form-field class="field w-20 text-uppercase">
+        <mat-label>UF</mat-label>
+        <input matInput formControlName="uf" oninput="this.value = this.value.toUpperCase()" maxlength="2"
+          placeholder="ex. SP">
+      </mat-form-field>
+    </div>
+  </div>
+
+  <!-- Botões -->
+  <section class="form-row">
     <div class="submit-button-row">
       <div class="submit-flex-container">
-        <button matFab extended type="submit" [disabled]="formulario.invalid">Enviar
-        </button>
-        <button matFab extended type="reset" class="btn-cancelar">Cancelar
-        </button>
+        <button matFab extended type="submit" [disabled]="formulario.invalid">Enviar</button>
+        <button matFab extended type="reset" class="btn-cancelar">Cancelar</button>
       </div>
     </div>
   </section>
