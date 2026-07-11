@@ -1,11 +1,20 @@
+import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { ErrorStateMatcher } from '@angular/material/core';
 import { MatFormFieldModule, MatLabel } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
-import { HttpClient } from '@angular/common/http';
 import { merge } from 'rxjs';
-import { ErrorStateMatcher } from '@angular/material/core';
+import { EstadoBr } from '../../shared/models/estadobr.models';
+import { ConsultaCepService } from '../../shared/services/consulta-cep.service';
+import { DropdownService } from '../../shared/services/dropdown.service';
 
 export class ImmediateErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl | null): boolean {
@@ -23,14 +32,22 @@ export class ImmediateErrorStateMatcher implements ErrorStateMatcher {
 export class FormComponent implements OnInit {
   formulario!: FormGroup;
   matcherImediato = new ImmediateErrorStateMatcher();
+  estados: EstadoBr[] = [];
   private urlApi = 'https://httpbin.org/post';
 
   constructor(
     private formBuilder: FormBuilder,
     private http: HttpClient,
+    private dropdownService: DropdownService,
+    private cepService: ConsultaCepService,
   ) {}
 
   ngOnInit() {
+    this.dropdownService.getEstadosBr().subscribe((dados) => {
+      this.estados = dados;
+      console.log(dados);
+    });
+
     this.formulario = this.formBuilder.group({
       nome: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
       email: ['', [Validators.required, Validators.email]],
@@ -65,31 +82,27 @@ export class FormComponent implements OnInit {
   buscarCep() {
     const cep = this.formulario.get('endereco.cep')?.value;
 
-    const cepLimpo = cep?.replace(/\D/g, '');
-
-    if (cepLimpo && cepLimpo.length === 8) {
-      this.http.get<any>(`https://viacep.com.br/ws/${cepLimpo}/json/`).subscribe({
-        next: (dados) => {
-          if (!dados.erro) {
-            this.formulario.get('ddd')?.setValue(dados.ddd);
-            this.formulario.get('endereco')?.patchValue({
-              logradouro: dados.logradouro,
-              complemento: dados.complemento,
-              bairro: dados.bairro,
-              cidade: dados.localidade,
-              uf: dados.uf,
-            });
-          } else {
-            alert('CEP não encontrado.');
-            this.resetarDadosForm();
-          }
-        },
-        error: (erro) => {
-          console.error('Erro ao buscar o CEP:', erro);
+    this.cepService.buscarCep(cep).subscribe({
+      next: (dados) => {
+        if (dados && !dados.erro) {
+          this.formulario.get('ddd')?.setValue(dados.ddd);
+          this.formulario.get('endereco')?.patchValue({
+            logradouro: dados.logradouro,
+            complemento: dados.complemento,
+            bairro: dados.bairro,
+            cidade: dados.localidade,
+            uf: dados.uf,
+          });
+        } else {
+          alert('CEP não encontrado.');
           this.resetarDadosForm();
-        },
-      });
-    }
+        }
+      },
+      error: (erro) => {
+        console.error('Erro ao buscar o CEP:', erro);
+        this.resetarDadosForm();
+      },
+    });
   }
 
   private resetarDadosForm(): void {
