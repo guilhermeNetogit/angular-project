@@ -37,6 +37,9 @@ export class FormComponent implements OnInit {
   estados: EstadoBr[] = [];
   cargoGroups: any[] = [];
   cargo = new FormControl('');
+  techList: any[] = [];
+  tech = new FormControl('');
+  escolaList: any[] = [];
   private urlApi = 'https://httpbin.org/post';
 
   constructor(
@@ -56,6 +59,14 @@ export class FormComponent implements OnInit {
       this.cargoGroups = dados;
     });
 
+    this.dropdownService.getTechs().subscribe((dados) => {
+      this.techList = dados;
+    });
+
+    this.dropdownService.getEscolaridade().subscribe((dados) => {
+      this.escolaList = dados;
+    });
+
     this.formulario = this.formBuilder.group({
       nome: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
       email: ['', [Validators.required, Validators.email]],
@@ -70,7 +81,9 @@ export class FormComponent implements OnInit {
         cidade: [''],
         uf: [''],
       }),
-      cargo: ['']
+      cargo: [''],
+      escolaridade: [''],
+      tech: []
     });
 
     this.configurarValidacaoNumero();
@@ -150,8 +163,11 @@ export class FormComponent implements OnInit {
 
   enviarDados(): void {
     if (this.formulario.valid) {
-      console.log('Dados do formulário:', this.formulario.value);
-      this.http.post(this.urlApi, this.formulario.value).subscribe({
+
+      const dadosFormulario = this.formulario.value;
+
+      console.log('Dados do formulário:', dadosFormulario);
+      this.http.post(this.urlApi, dadosFormulario).subscribe({
         next: (dados) => {
           console.log('Resposta da API', dados);
           this.formulario.reset();

@@ -34,4 +34,26 @@ export class DropdownService {
     ];
     return of(cargoControl);
   }
+
+  getTechs(): Observable<any> {
+    const techList = [
+      {nome: 'java', descr: 'Java'},
+      {nome: 'js', descr: 'JavaScript'} ,
+      {nome: 'ts', descr: 'TypeScript'} ,
+      {nome: 'php', descr: 'PHP'},
+      {nome: 'angular', descr: 'Angular'},
+      {nome: 'sql', descr: 'SQL'}
+    ];
+    return of(techList);
+  }
+
+  getEscolaridade(): Observable<any> {
+    const escolaList = [
+      {nome: 'efc', descr: 'Fundamental Completo'},
+      {nome: 'emc', descr: 'Médio Completo'},
+      {nome: 'esc', descr: 'Superior Completo'},
+      {nome: 'pgc', descr: 'Pós-Graduação Completa'}
+    ];
+    return of(escolaList);
+  }
 }
