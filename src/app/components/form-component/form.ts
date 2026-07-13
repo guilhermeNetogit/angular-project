@@ -15,6 +15,8 @@ import { merge } from 'rxjs';
 import { EstadoBr } from '../../shared/models/estadobr.models';
 import { ConsultaCepService } from '../../shared/services/consulta-cep.service';
 import { DropdownService } from '../../shared/services/dropdown.service';
+import { MatSelectModule } from "@angular/material/select";
+import { NgFor } from '@angular/common';
 
 export class ImmediateErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl | null): boolean {
@@ -25,7 +27,7 @@ export class ImmediateErrorStateMatcher implements ErrorStateMatcher {
 @Component({
   selector: 'app-form',
   standalone: true,
-  imports: [ReactiveFormsModule, MatFormFieldModule, MatLabel, MatInputModule, MatButtonModule],
+  imports: [ReactiveFormsModule, MatFormFieldModule, MatLabel, MatInputModule, MatButtonModule, MatSelectModule, NgFor],
   templateUrl: './form.html',
   styleUrl: './form.scss',
 })
@@ -33,6 +35,8 @@ export class FormComponent implements OnInit {
   formulario!: FormGroup;
   matcherImediato = new ImmediateErrorStateMatcher();
   estados: EstadoBr[] = [];
+  cargoGroups: any[] = [];
+  cargo = new FormControl('');
   private urlApi = 'https://httpbin.org/post';
 
   constructor(
@@ -48,11 +52,15 @@ export class FormComponent implements OnInit {
       console.log(dados);
     });
 
+    this.dropdownService.getCargos().subscribe((dados) => {
+      this.cargoGroups = dados;
+    });
+
     this.formulario = this.formBuilder.group({
       nome: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
       email: ['', [Validators.required, Validators.email]],
       ddd: [''],
-      telefone: [],
+      telefone: [''],
       endereco: this.formBuilder.group({
         cep: ['', [Validators.pattern(/^[0-9]{5}-?[0-9]{3}$/)]],
         numero: [''],
@@ -62,6 +70,7 @@ export class FormComponent implements OnInit {
         cidade: [''],
         uf: [''],
       }),
+      cargo: ['']
     });
 
     this.configurarValidacaoNumero();

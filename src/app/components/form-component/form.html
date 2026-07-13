@@ -35,10 +35,32 @@
   </div>
 
   <div>
-    <mat-form-field class="field w-50">
+
+  </div>
+
+
+
+  <div class="form-row">
+
+    <mat-form-field class="field w-60">
       <mat-label>Telefone</mat-label>
       <span matTextPrefix>{{ formulario.get('ddd')?.value }} &nbsp;</span>
       <input type="tel" formControlName="telefone" matInput placeholder="555-555-1234">
+    </mat-form-field>
+
+    <mat-form-field class="field w-40">
+      <mat-label>Cargo</mat-label>
+      <mat-select formControlName="cargo">
+        <mat-option>-- None --</mat-option>
+          <mat-optgroup *ngFor="let group of cargoGroups"
+                        [label]="group.name"
+                        [disabled]="group.disabled">
+              <mat-option *ngFor="let item of group.cargo"
+                          [value]="item">
+                {{ item.nome }} {{item.nivel}}
+              </mat-option>
+          </mat-optgroup>
+      </mat-select>
     </mat-form-field>
   </div>
 
@@ -96,6 +118,7 @@
         <mat-label>Cidade</mat-label>
         <input matInput type="text" formControlName="cidade" placeholder="ex. São Paulo">
       </mat-form-field>
+
       <mat-form-field class="field w-20 text-uppercase">
         <mat-label>UF</mat-label>
         <input matInput formControlName="uf" oninput="this.value = this.value.toUpperCase()" maxlength="2"
