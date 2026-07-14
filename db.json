@@ -1,0 +1,42 @@
+{
+  "cursos": [
+    {
+      "id": 1,
+      "nome": "Angular"
+    },
+    {
+      "id": 2,
+      "nome": "Java"
+    },
+    {
+      "id": 3,
+      "nome": "SQL"
+    },
+    {
+      "id": 4,
+      "nome": "JavaScript"
+    },
+    {
+      "nome": "PHP",
+      "id": 5
+    }
+  ],
+  "comments": [
+    {
+      "id": 1,
+      "text": "a comment about post 1",
+      "postId": 1
+    },
+    {
+      "id": 2,
+      "text": "another comment about post 1",
+      "postId": 1
+    },
+    {
+      "id": 3,
+      "text": "one more comment about post 1",
+      "postId": 1
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
+}

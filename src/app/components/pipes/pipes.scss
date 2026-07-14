@@ -1,3 +1,9 @@
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
 table {
   width: 100%;
   max-width: 800px;
@@ -28,4 +34,8 @@ td:nth-child(4), th:nth-child(4) {
 tfoot tr {
   font-weight: bold;
   background-color: #f5f5f5;
+}
+
+p {
+  text-align: justify;
 }
