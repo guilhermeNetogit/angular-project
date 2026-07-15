@@ -34,11 +34,62 @@
     </mat-form-field>
   </div>
 
-  <div>
-    <mat-form-field class="field w-50">
+  <div class="form-row">
+
+    <mat-form-field class="field w-60">
       <mat-label>Telefone</mat-label>
       <span matTextPrefix>{{ formulario.get('ddd')?.value }} &nbsp;</span>
       <input type="tel" formControlName="telefone" matInput placeholder="555-555-1234">
+    </mat-form-field>
+
+    <mat-form-field class="field w-40">
+      <mat-label>Cargo</mat-label>
+      <mat-select formControlName="cargo">
+        <mat-option>-- None --</mat-option>
+        <mat-optgroup *ngFor="let group of cargoGroups" [label]="group.name" [disabled]="group.disabled">
+          <mat-option *ngFor="let item of group.cargo" [value]="item">
+            {{ item.nome }} {{item.nivel}}
+          </mat-option>
+        </mat-optgroup>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <div class="form-row">
+
+    <mat-form-field class="field w-50">
+      <mat-label>Escolaridade</mat-label>
+      <mat-select formControlName="escolaridade">
+        @for (escolaridade of escolaList; track escolaridade.descr) {
+        <mat-option [value]="escolaridade">
+          {{ escolaridade.descr}}
+        </mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field class="field w-50">
+      <mat-label>Tecnologias</mat-label>
+      <mat-select formControlName="tech" multiple>
+
+        <mat-select-trigger>
+          <!-- Só exibe o descr se o primeiro item realmente existir -->
+          {{ formulario.get('tech')?.value?.[0]?.descr || '' }}
+
+          <!-- Armazena o tamanho do array com segurança -->
+          @let totalSelecionado = formulario.get('tech')?.value?.length || 0;
+
+          @if (totalSelecionado > 1) {
+          <span class="example-additional-selection">
+            (+{{ totalSelecionado - 1 }} {{ totalSelecionado === 2 ? 'other' : 'others' }})
+          </span>
+          }
+        </mat-select-trigger>
+
+        @for (tech of techList; track tech.descr) {
+        <mat-option [value]="tech">{{ tech.descr }}</mat-option>
+        }
+      </mat-select>
     </mat-form-field>
   </div>
 
@@ -82,8 +133,7 @@
     <div class="form-row">
       <mat-form-field class="field full-width">
         <mat-label>Complemento:</mat-label>
-        <input matInput type="text" formControlName="complemento" #complemento id="complemento" type="text"
-          maxlength="50">
+        <input matInput type="text" formControlName="complemento" #complemento id="complemento" maxlength="50">
         <mat-hint align="end">{{complemento.value.length}} / 50</mat-hint>
         @if (formulario.get('endereco.complemento')?.errors?.['maxlength']) {
         <mat-error>O complemento deve ter no máximo 50 caracteres.</mat-error>
@@ -96,6 +146,7 @@
         <mat-label>Cidade</mat-label>
         <input matInput type="text" formControlName="cidade" placeholder="ex. São Paulo">
       </mat-form-field>
+
       <mat-form-field class="field w-20 text-uppercase">
         <mat-label>UF</mat-label>
         <input matInput formControlName="uf" oninput="this.value = this.value.toUpperCase()" maxlength="2"

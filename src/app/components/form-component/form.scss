@@ -14,17 +14,12 @@
   gap: 8px;
 }
 
-/* Configuração base dos campos */
-.field {
-  width: 100%; /* Por padrão ocupam tudo, a linha controla a divisão */
-}
-
 /* Classes utilitárias de proporção (Substituem os cálculos em px) */
 .full-width { flex: 1 1 100%; }
 .w-80       { flex: 1 1 80%; }
 .w-70       { flex: 1 1 70%; }
 .w-60       { flex: 1 1 60%; }
-.w-50       { flex: 1 1 50%; }
+.w-50       { flex: 1 1 calc(50% - 8px); width: calc(50% - 8px) !important; }
 .w-40       { flex: 1 1 40%; }
 .w-30       { flex: 1 1 30%; }
 .w-20       { flex: 1 1 20%; }
@@ -69,4 +64,10 @@
   background-color: #e0e0e0 !important;
   color: #333333 !important;
   box-shadow: none !important;
+}
+
+.example-additional-selection {
+  opacity: 0.75;
+  font-size: 0.75em;
+  line-height: 1;
 }

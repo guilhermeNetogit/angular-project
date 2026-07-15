@@ -1,14 +1,15 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { CursosComponent } from './components/cursos-component/cursos';
 import { FormComponent } from './components/form-component/form';
-import { authGuard } from './guards/auth.guard';
-import { UsuariosGuard } from './guards/usuarios.guard';
 import { Home } from './components/home/home';
 import { LoginComponent } from './components/login/login';
 import { PageNotFoundComponent } from './components/pages/page-not-found/page-not-found';
 import { Pipes } from './components/pipes/pipes';
 import { PrimeiroComponent } from './components/primeiro-component/primeiro';
 import { SegundoComponent } from './components/segundo-component/segundo';
+import { authGuard } from './guards/auth.guard';
+import { UsuariosGuard } from './guards/usuarios.guard';
 //import { Usuarios } from './usuarios/usuarios';
 //import { UsuariosDetalhe } from './usuarios/usuarios-detalhe/usuarios-detalhe';
 
@@ -47,6 +48,12 @@ export const appRoutes: Routes = [
     path: 'form',
     component: FormComponent,
     data: { title: 'Form Module' },
+    canMatch: [authGuard],
+  },
+  {
+    path: 'cursos',
+    component: CursosComponent,
+    data: { title: 'Cursos Module' },
     canMatch: [authGuard],
   },
   { path: '404', component: PageNotFoundComponent },
