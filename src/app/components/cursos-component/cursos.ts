@@ -3,10 +3,11 @@ import { Component, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from "@angular/material/icon";
 import { MatTableModule } from '@angular/material/table';
-import { delay, Observable, ReplaySubject, shareReplay } from 'rxjs';
+import { BehaviorSubject, catchError, delay, Observable, of, ReplaySubject, shareReplay, switchMap, tap } from 'rxjs';
 import { CursosService } from './cursos.service';
 import { AsyncPipe } from '@angular/common';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatCardModule } from '@angular/material/card';
 
 export interface PeriodicElement {
   id: number;
@@ -19,7 +20,7 @@ export interface PeriodicElement {
 
 @Component({
   selector: 'app-cursos',
-  imports: [AsyncPipe, MatTableModule, MatButtonModule, MatIconModule, MatProgressBarModule],
+  imports: [AsyncPipe, MatCardModule, MatTableModule, MatButtonModule, MatIconModule, MatProgressBarModule],
   templateUrl: './cursos.html',
   styleUrl: './cursos.scss',
 })
@@ -28,7 +29,13 @@ export class CursosComponent implements OnInit{
   columnsToDisplay = ['position', 'symbol', 'name', 'weight'];
   columnsToDisplayWithExpand = [...this.columnsToDisplay, 'expand'];
   expandedElement: PeriodicElement | null = null;
-  initialData$!: Observable<PeriodicElement[]>;
+
+  initialData$!: Observable<PeriodicElement[] | null>;
+  private errorSubject = new BehaviorSubject<boolean>(false);
+  error$ = this.errorSubject.asObservable();
+
+  private reloadSubject = new BehaviorSubject<void>(undefined);
+
 
   /*addData() {
     const randomElementIndex = Math.floor(Math.random() * ELEMENT_DATA.length);
@@ -44,8 +51,23 @@ export class CursosComponent implements OnInit{
   constructor(private service: CursosService) {}
 
   ngOnInit() {
-   this.initialData$ = this.service.getList().pipe(delay(1500));
+    // O switchMap escuta o reloadSubject. Sempre que ele emite, uma nova busca é feita
+    this.initialData$ = this.reloadSubject.pipe(
+      tap(() => this.errorSubject.next(false)), // Reseta o estado de erro antes de tentar recarregar
+      switchMap(() => this.service.getList().pipe(
+        delay(1500),
+        catchError(error => {
+          console.error(error);
+          this.errorSubject.next(true); // Ativa o erro no HTML
+          return of(null); // Retorna null para entrar no bloco @else do HTML
+        })
+      ))
+    );
   }
+
+  recarregarDados() {
+      this.reloadSubject.next(); // Dispara o gatilho para refazer a requisição
+    }
 
   isExpanded(element: PeriodicElement) {
     return this.expandedElement === element;
