@@ -3,9 +3,10 @@ import { Component, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from "@angular/material/icon";
 import { MatTableModule } from '@angular/material/table';
-import { Observable, ReplaySubject } from 'rxjs';
+import { delay, Observable, ReplaySubject, shareReplay } from 'rxjs';
 import { CursosService } from './cursos.service';
 import { AsyncPipe } from '@angular/common';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 export interface PeriodicElement {
   id: number;
@@ -18,7 +19,7 @@ export interface PeriodicElement {
 
 @Component({
   selector: 'app-cursos',
-  imports: [AsyncPipe,MatTableModule, MatButtonModule, MatIconModule],
+  imports: [AsyncPipe, MatTableModule, MatButtonModule, MatIconModule, MatProgressBarModule],
   templateUrl: './cursos.html',
   styleUrl: './cursos.scss',
 })
@@ -43,7 +44,7 @@ export class CursosComponent implements OnInit{
   constructor(private service: CursosService) {}
 
   ngOnInit() {
-   this.initialData$ = this.service.getList();
+   this.initialData$ = this.service.getList().pipe(delay(1500));
   }
 
   isExpanded(element: PeriodicElement) {

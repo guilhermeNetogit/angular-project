@@ -1,3 +1,5 @@
+@use '@angular/material' as mat;
+
 table {
   width: 100%;
 }
@@ -77,4 +79,11 @@ tr.example-element-row:not(.example-expanded-row):active {
 
 .demo-button + .demo-button {
   margin-left: 8px;
+}
+
+:host {
+  @include mat.progress-bar-overrides((
+    active-indicator-color: rgb(255, 95, 95),
+    track-color: rgb(146, 95, 255),
+  ));
 }
