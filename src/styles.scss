@@ -121,3 +121,24 @@ body {
   width: 18px !important;
   height: 18px !important;
 }
+
+.cdk-overlay-container {
+  .success-snackbar {
+    background-color: #4caf50 !important;
+    color: #fff !important;
+
+    /* Garante que o texto dos botões/ações dentro dele também fique branco */
+    .mat-mdc-snack-bar-action {
+      color: #fff !important;
+    }
+  }
+
+  .error-snackbar {
+    background-color: #f44336 !important;
+    color: #fff !important;
+
+    .mat-mdc-snack-bar-action {
+      color: #fff !important;
+    }
+  }
+}
