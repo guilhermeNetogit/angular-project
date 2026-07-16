@@ -59,6 +59,7 @@ tr.example-element-row:not(.example-expanded-row):active {
 
 .example-element-description {
   padding: 16px;
+  text-align: justify;
 }
 
 .example-element-description-attribution {
@@ -89,7 +90,7 @@ tr.example-element-row:not(.example-expanded-row):active {
 }
 
 .error-container {
-  width: 450px;
+  width: 400px;
   display: flex;
   align-items: center;
   justify-content: space-between;

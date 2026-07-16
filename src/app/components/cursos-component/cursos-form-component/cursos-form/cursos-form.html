@@ -51,6 +51,9 @@
             @if (form.get('weight')?.hasError('required')) {
               <mat-error>O peso é obrigatório</mat-error>
             }
+            @if (form.get('position')?.hasError('min')) {
+              <mat-error>Mínimo é 1</mat-error>
+            }
           </mat-form-field>
         </div>
 
@@ -67,7 +70,7 @@
           <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">
             Salvar
           </button>
-          <button mat-button type="button" (click)="onCancel()">
+          <button mat-button type="button" color="warn" (click)="onCancel()">
             Cancelar
           </button>
         </div>

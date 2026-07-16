@@ -103,6 +103,62 @@
       "weight": 26.9815,
       "description": "Electron configuration: [Ne] 3s² 3p¹.It has a density lower than other common metals, about one-third that of steel.",
       "id": 13
+    },
+    {
+      "position": 14,
+      "name": "Silicon",
+      "symbol": "Si",
+      "weight": 28.084,
+      "description": "Electron configuration: [Ne] 3s2 3p². It is a hard, brittle crystalline solid with a blue-grey metallic lustre, and is a tetravalent non-metal (sometimes considered as a metalloid) and semiconductor.",
+      "id": 14
+    },
+    {
+      "position": 15,
+      "name": "Phosphorus",
+      "symbol": "P",
+      "weight": 30.9737,
+      "description": "Electron configuration: [Ne] 3s² 3p³. All elemental forms of phosphorus are highly reactive and are therefore never found in nature. Elemental phosphorus can be prepared artificially, the two most common allotropes being white  and red.",
+      "id": 15
+    },
+    {
+      "position": 16,
+      "name": "Sulfur",
+      "symbol": "S",
+      "weight": 32.059,
+      "description": "Electron configuration: [Ne] 3s² 3p⁴. It is abundant, multivalent and nonmetallic. Under normal conditions, sulfur atoms form cyclic octatomic molecules with the chemical formula S8.",
+      "id": 16
+    },
+    {
+      "position": 17,
+      "name": "Chlorine",
+      "symbol": "Cl",
+      "weight": 354460,
+      "description": "Electron configuration: [Ne] 3s² 3p⁵. The second-lightest of the halogens, it appears between fluorine and bromine in the periodic table and its properties are mostly intermediate between them.",
+      "id": 17
+    },
+    {
+      "position": 18,
+      "name": "Argon",
+      "symbol": "Ar",
+      "weight": 39.792,
+      "description": "Electron configuration: [Ne] 3s² 3p⁶. Argon is the third most abundant gas in Earth's atmosphere, at 0.934% (9340 ppmv). It is more than twice as abundant as water vapor (which averages about 4000 ppmv, but varies greatly).",
+      "id": 18
+    },
+    {
+      "position": 19,
+      "name": "Potassium",
+      "symbol": "K",
+      "weight": 39.0983,
+      "description": "From Neo-Latin kalium. Electron configuration: [Ar] 4s¹. It is a silvery white metal that is soft enough to easily cut with a knife.[9] Potassium metal reacts rapidly with atmospheric oxygen to form flaky white potassium peroxide.",
+      "id": 19
+    },
+    {
+      "position": 20,
+      "name": "Calcium",
+      "symbol": "C",
+      "weight": 40.078,
+      "description": "Electron configuration: [Ar] 4s². As an alkaline earth metal, calcium is a reactive metal that forms a dark oxide-nitride layer when exposed to air.",
+      "id": 20
     }
   ]
 }
