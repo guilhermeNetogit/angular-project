@@ -7,7 +7,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatTableModule } from '@angular/material/table';
 import { BehaviorSubject, catchError, delay, Observable, of, switchMap, tap } from 'rxjs';
 import { CursosService } from './cursos.service';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 export interface PeriodicElement {
   id: number;
@@ -31,25 +31,40 @@ export class CursosComponent implements OnInit{
   columnsToDisplayWithExpand = [...this.columnsToDisplay, 'expand'];
   expandedElement: PeriodicElement | null = null;
 
+  selectedRow: any | null = null;
+
   initialData$!: Observable<PeriodicElement[] | null>;
   private errorSubject = new BehaviorSubject<boolean>(false);
   error$ = this.errorSubject.asObservable();
 
   private reloadSubject = new BehaviorSubject<void>(undefined);
 
-
-  /*addData() {
-    const randomElementIndex = Math.floor(Math.random() * ELEMENT_DATA.length);
-    this.dataToDisplay = [...this.dataToDisplay, ELEMENT_DATA[randomElementIndex]];
-    this.dataSource.setData(this.dataToDisplay);
-  }
-
+  /*
   removeData() {
     this.dataToDisplay = this.dataToDisplay.slice(0, -1);
     this.dataSource.setData(this.dataToDisplay);
   }*/
 
-  constructor(private service: CursosService) {}
+  constructor(
+    private service: CursosService,
+    private router: Router
+  ) {}
+
+  // Função para lidar com a seleção ao clicar em uma linha
+    selectRow(element: any): void {
+      // Se o usuário clicar no mesmo elemento, desmarca. Caso contrário, seleciona o novo.
+      this.selectedRow = this.selectedRow === element ? null : element;
+    }
+
+  // Função disparada pelo botão Edit
+    onEdit(): void {
+      if (this.selectedRow) {
+        // Navega para a rota de edição passando o identificador (ex: 'id' ou 'position')
+        // Ajuste o caminho '/cursos/editar' e a propriedade identificadora conforme sua rota
+        const id = this.selectedRow.id || this.selectedRow.position;
+        this.router.navigate(['cursos', 'editar', id]);
+      }
+    }
 
   ngOnInit() {
     // O switchMap escuta o reloadSubject. Sempre que ele emite, uma nova busca é feita
@@ -70,11 +85,18 @@ export class CursosComponent implements OnInit{
       this.reloadSubject.next(); // Dispara o gatilho para refazer a requisição
     }
 
-  isExpanded(element: PeriodicElement) {
+  isExpanded(element: PeriodicElement): boolean {
     return this.expandedElement === element;
   }
 
   toggle(element: PeriodicElement) {
-      this.expandedElement = this.isExpanded(element) ? null : element;
+    if (this.isExpanded(element)) {
+      this.expandedElement = null;
+      this.selectedRow = null;
+    } else {
+      this.expandedElement = element;
+      this.selectedRow = element;
+    }
+
   }
 }

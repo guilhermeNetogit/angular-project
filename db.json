@@ -159,6 +159,14 @@
       "weight": 40.078,
       "description": "Electron configuration: [Ar] 4s². As an alkaline earth metal, calcium is a reactive metal that forms a dark oxide-nitride layer when exposed to air.",
       "id": 20
+    },
+    {
+      "position": 21,
+      "name": "Teste",
+      "symbol": "Te",
+      "weight": 10,
+      "description": "Apenas um teste para verificar o edit/update",
+      "id": 21
     }
   ]
 }
