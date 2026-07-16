@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { CursosComponent } from './cursos';
-import { tap } from 'rxjs';
+import { CursosComponent, PeriodicElement } from './cursos';
+import { Observable, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
 
 @Injectable({
@@ -19,5 +19,9 @@ export class CursosService {
         tap(console.log)
       );
   }
+
+  save(curso: PeriodicElement): Observable<PeriodicElement> {
+      return this.http.post<PeriodicElement>(this.API, curso);
+    }
 }
 

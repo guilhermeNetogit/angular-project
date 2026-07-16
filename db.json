@@ -87,6 +87,22 @@
       "symbol": "Na",
       "description": "From Neo-Latin natrium. Electron configuration: [Ne] 3s¹. It is a soft, silvery-white, highly reactive metal. Sodium is an alkali metal, being in group 1 of the periodic table.",
       "id": 11
+    },
+    {
+      "position": 12,
+      "name": "Magnesium",
+      "weight": 24.3048,
+      "symbol": "Mg",
+      "description": "Electron configuration: [Ne] 3s². It is a shiny gray metal having a low density, low melting point, and high chemical reactivity. Like the other alkaline earth metals (group 2 of the periodic table).",
+      "id": 12
+    },
+    {
+      "position": 13,
+      "name": "Aluminium",
+      "symbol": "Al",
+      "weight": 26.9815,
+      "description": "Electron configuration: [Ne] 3s² 3p¹.It has a density lower than other common metals, about one-third that of steel.",
+      "id": 13
     }
   ]
 }

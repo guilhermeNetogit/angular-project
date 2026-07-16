@@ -1,7 +1,8 @@
 @if (initialData$ | async; as cursos) {
 
 <div class="demo-button-container">
-  <button matButton="elevated" class="demo-button">
+  <button matButton="elevated" class="demo-button"
+  [routerLink]="['novo']">
     Add
     <mat-icon>add</mat-icon>
   </button>

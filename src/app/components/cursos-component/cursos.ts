@@ -1,13 +1,13 @@
-import { DataSource } from '@angular/cdk/table';
+import { AsyncPipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from "@angular/material/icon";
-import { MatTableModule } from '@angular/material/table';
-import { BehaviorSubject, catchError, delay, Observable, of, ReplaySubject, shareReplay, switchMap, tap } from 'rxjs';
-import { CursosService } from './cursos.service';
-import { AsyncPipe } from '@angular/common';
-import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from "@angular/material/icon";
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatTableModule } from '@angular/material/table';
+import { BehaviorSubject, catchError, delay, Observable, of, switchMap, tap } from 'rxjs';
+import { CursosService } from './cursos.service';
+import { RouterLink } from '@angular/router';
 
 export interface PeriodicElement {
   id: number;
@@ -20,7 +20,8 @@ export interface PeriodicElement {
 
 @Component({
   selector: 'app-cursos',
-  imports: [AsyncPipe, MatCardModule, MatTableModule, MatButtonModule, MatIconModule, MatProgressBarModule],
+  standalone: true,
+  imports: [AsyncPipe, MatCardModule, MatTableModule, MatButtonModule, MatIconModule, MatProgressBarModule, RouterLink],
   templateUrl: './cursos.html',
   styleUrl: './cursos.scss',
 })

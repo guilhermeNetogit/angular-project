@@ -1,3 +1,4 @@
+import { CursosRoutingModule } from './components/cursos-component/cursos.routes';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { CursosComponent } from './components/cursos-component/cursos';
@@ -52,8 +53,8 @@ export const appRoutes: Routes = [
   },
   {
     path: 'cursos',
-    component: CursosComponent,
     data: { title: 'Cursos Module' },
+    loadChildren: () => import('./components/cursos-component/cursos.routes').then((m) => m.CursosRoutingModule),
     canMatch: [authGuard],
   },
   { path: '404', component: PageNotFoundComponent },
