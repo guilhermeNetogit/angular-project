@@ -10,6 +10,7 @@ import { NotificationsService } from '../../../../shared/services/notifications.
 import { CursosService } from '../../cursos.service';
 import { MatButtonModule } from '@angular/material/button';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { map, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-cursos-form',
@@ -49,27 +50,18 @@ export class CursosFormComponent {
       description: ['', [Validators.required, Validators.maxLength(255)]],
     });
 
-    this.route.params.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params: any) => {
-      const id = params['id'];
-      console.log(id);
-
-      if (id) {
-        this.cursoId = id;
-
-        this.service
-          .getById(this.cursoId)
-          .pipe(takeUntilDestroyed(this.destroyRef))
-          .subscribe({
-            next: (curso) => {
-              this.form.patchValue(curso);
-            },
-            error: (err) => {
-              console.error('Erro ao buscar curso:', err);
-              this.notificationService.error('Erro ao carregar os dados do curso.');
-              this.router.navigate(['/cursos']);
-            },
-          });
-      }
+    this.route.data.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: ({ curso }) => {
+        if (curso) {
+          this.cursoId = this.cursoId;
+          this.form.patchValue(curso);
+        }
+      },
+      error: (err) => {
+        console.error('Erro ao buscar curso:', err);
+        this.notificationService.error('Erro ao carregar os dados do curso.');
+        this.router.navigate(['/cursos']);
+      },
     });
   }
 

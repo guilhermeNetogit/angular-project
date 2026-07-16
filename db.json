@@ -162,10 +162,10 @@
     },
     {
       "position": 21,
-      "name": "Teste",
-      "symbol": "Te",
-      "weight": 10,
-      "description": "Apenas um teste para verificar o edit/update",
+      "name": "Scandium",
+      "symbol": "Sc",
+      "weight": 44.9559,
+      "description": "Electron configuration: [Ar] 3d¹ 4s². It is a silvery-white metallic element found in the d-block of the periodic table. Usually, it is classified as a rare-earth element,[9] together with yttrium and the lanthanides.",
       "id": 21
     }
   ]
