@@ -20,8 +20,17 @@ export class CursosService {
       );
   }
 
+  getById(id: number): Observable<PeriodicElement> {
+    return this.http.get<PeriodicElement>(`${this.API}/${id}`).pipe(take(1));
+
+  }
+
   create(curso: PeriodicElement): Observable<PeriodicElement> {
       return this.http.post<PeriodicElement>(this.API, curso).pipe(take(1));
     }
+
+  update(id: number, record: Partial<PeriodicElement>): Observable<PeriodicElement> {
+    return this.http.put<PeriodicElement>(`${this.API}/${id}`, record);
+  }
 }
 

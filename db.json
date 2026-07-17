@@ -159,6 +159,14 @@
       "weight": 40.078,
       "description": "Electron configuration: [Ar] 4s². As an alkaline earth metal, calcium is a reactive metal that forms a dark oxide-nitride layer when exposed to air.",
       "id": 20
+    },
+    {
+      "position": 21,
+      "name": "Scandium",
+      "symbol": "Sc",
+      "weight": 44.9559,
+      "description": "Electron configuration: [Ar] 3d¹ 4s². It is a silvery-white metallic element found in the d-block of the periodic table. Usually, it is classified as a rare-earth element,[9] together with yttrium and the lanthanides.",
+      "id": 21
     }
   ]
 }

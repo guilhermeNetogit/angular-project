@@ -1,31 +1,44 @@
-import { Component } from '@angular/core';
+import { Component, DestroyRef, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatCardModule } from "@angular/material/card";
-import { MatFormFieldModule } from "@angular/material/form-field";
-import { MatIconModule } from "@angular/material/icon";
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NotificationsService } from '../../../../shared/services/notifications.service';
 import { CursosService } from '../../cursos.service';
 import { MatButtonModule } from '@angular/material/button';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { map, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-cursos-form',
   standalone: true,
-  imports: [MatButtonModule, MatCardModule, MatFormFieldModule, MatInputModule, ReactiveFormsModule, MatIconModule, MatSnackBarModule],
+  imports: [
+    MatButtonModule,
+    MatCardModule,
+    MatFormFieldModule,
+    MatInputModule,
+    ReactiveFormsModule,
+    MatIconModule,
+    MatSnackBarModule,
+  ],
   templateUrl: './cursos-form.html',
-  styleUrl: './cursos-form.scss'
+  styleUrl: './cursos-form.scss',
 })
 export class CursosFormComponent {
-
   form!: FormGroup;
+  cursoId: any = null;
+
+  private destroyRef = inject(DestroyRef);
 
   constructor(
     private formBuilder: FormBuilder,
     private router: Router,
     private service: CursosService,
-    private notificationService: NotificationsService
+    private notificationService: NotificationsService,
+    private route: ActivatedRoute,
   ) {}
 
   ngOnInit() {
@@ -34,30 +47,50 @@ export class CursosFormComponent {
       name: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(30)]],
       symbol: ['', [Validators.required, Validators.maxLength(2)]],
       weight: [null, [Validators.required, Validators.min(1)]],
-      description: ['', [Validators.required,Validators.maxLength(255)]]
+      description: ['', [Validators.required, Validators.maxLength(255)]],
+    });
+
+    this.route.data.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: ({ curso }) => {
+        if (curso) {
+          this.cursoId = this.cursoId;
+          this.form.patchValue(curso);
+        }
+      },
+      error: (err) => {
+        console.error('Erro ao buscar curso:', err);
+        this.notificationService.error('Erro ao carregar os dados do curso.');
+        this.router.navigate(['/cursos']);
+      },
     });
   }
 
   onSubmit(): void {
-  if (this.form.valid) {
-    console.log('Enviando dados:', this.form.value);
+    if (this.form.valid) {
+      console.log('Enviando dados:', this.form.value);
 
-    // Envia o formulário completo diretamente ao seu service
-    this.service.create(this.form.value).subscribe({
-      next: () => {
-        this.notificationService.success('Registro salvo com sucesso!');
-        this.router.navigate(['/cursos']);
-      },
-      error: (err) => {
-        console.error('Erro ao salvar:', err);
-        this.notificationService.error('Ocorreu um erro ao tentar salvar o curso.');
-      }
-    });
+      // 1. Define qual requisição fazer com base na existência do cursoId
+      const request$ = this.cursoId
+        ? this.service.update(this.cursoId, this.form.value)
+        : this.service.create(this.form.value);
+
+      request$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+        next: () => {
+          const mensagem = this.cursoId
+            ? 'Registro atualizado com sucesso!'
+            : 'Registro salvo com sucesso!';
+          this.notificationService.success(mensagem);
+          this.router.navigate(['/cursos']);
+        },
+        error: (err) => {
+          console.error('Erro ao salvar:', err);
+          this.notificationService.error('Ocorreu um erro ao tentar salvar o curso.');
+        },
+      });
+    }
   }
-}
 
   onCancel(): void {
-      this.router.navigate(['/cursos']);
-    }
-
+    this.router.navigate(['/cursos']);
+  }
 }
