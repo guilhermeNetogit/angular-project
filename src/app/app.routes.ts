@@ -11,6 +11,7 @@ import { PrimeiroComponent } from './components/primeiro-component/primeiro';
 import { SegundoComponent } from './components/segundo-component/segundo';
 import { authGuard } from './guards/auth.guard';
 import { UsuariosGuard } from './guards/usuarios.guard';
+import { UploadFileComponent } from './components/upload-file/upload-file';
 //import { Usuarios } from './usuarios/usuarios';
 //import { UsuariosDetalhe } from './usuarios/usuarios-detalhe/usuarios-detalhe';
 
@@ -55,6 +56,12 @@ export const appRoutes: Routes = [
     path: 'cursos',
     data: { title: 'Cursos Module' },
     loadChildren: () => import('./components/cursos-component/cursos.routes').then((m) => m.CursosRoutingModule),
+    canMatch: [authGuard],
+  },
+  {
+    path: 'upload-file',
+    component: UploadFileComponent,
+    data: { title: 'Upload Files' },
     canMatch: [authGuard],
   },
   { path: '404', component: PageNotFoundComponent },
