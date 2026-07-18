@@ -32,5 +32,9 @@ export class CursosService {
   update(id: number, record: Partial<PeriodicElement>): Observable<PeriodicElement> {
     return this.http.put<PeriodicElement>(`${this.API}/${id}`, record);
   }
+
+  delete(id: number) {
+    return this.http.delete<PeriodicElement>(`${this.API}/${id}`).pipe(take(1));
+  }
 }
 

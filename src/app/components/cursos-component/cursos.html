@@ -8,14 +8,16 @@
   </button>
 
   <button matButton="elevated" class="demo-button"
-  [disabled]="!selectedRow"
+  [disabled]="!selectedRow()"
   (click)="onEdit()">
     Edit
     <mat-icon>edit</mat-icon>
   </button>
 
-  <button matButton="elevated" [disabled]="!cursos.length" class="demo-button">
-    Remove
+  <button matButton="elevated" class="demo-button"
+  [disabled]="!selectedRow()"
+  (click)="onDelete('550ms', '350ms')">
+    Delete
     <mat-icon>delete</mat-icon>
   </button>
 </div>
