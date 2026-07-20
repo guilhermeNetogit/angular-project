@@ -1,7 +1,7 @@
 <div class="upload-container">
   <label class="upload-box">
     <!-- Input real escondido para fins de acessibilidade e funcionamento -->
-    <input type="file" class="file-input" (change)="onFileSelected($event)">
+    <input #fileInput type="file" class="file-input" (change)="onFileSelected($event)" multiple>
 
     <div class="upload-content">
       <div class="text-wrapper">
@@ -20,3 +20,12 @@
     </div>
   </label>
 </div>
+
+<button
+  mat-raised-button
+  type="button"
+  class="btn-upload"
+  (click)="onUpload()"
+  [disabled]="arquivosSelecionados.length === 0 || isUploading">
+  Enviar
+</button>
