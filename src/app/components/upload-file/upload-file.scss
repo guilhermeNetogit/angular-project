@@ -1,0 +1,88 @@
+:host {
+  display: block;
+  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+.upload-container {
+  max-width: 400px;
+  margin: 16px 0;
+}
+
+.upload-box {
+  display: block;
+  cursor: pointer;
+  background-color: #f3f4f9;
+  border: 1px solid #e2e4ed;
+  border-radius: 8px;
+  transition: all 0.2s ease-in-out;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+}
+
+/* Efeito de foco/hover integrado ao estilo do Angular */
+.upload-box:hover {
+  background-color: #ebecf4;
+  border-color: #dd0074; /* Cor magenta do Angular */
+  box-shadow: 0 4px 12px rgba(221, 0, 116, 0.08);
+}
+
+.file-input {
+  display: none; /* Esconde o input padrão do navegador */
+}
+
+.upload-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+}
+
+.text-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.upload-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #6b7280;
+}
+
+.file-name {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #9ca3af; /* Cor neutra para quando está vazio */
+}
+
+/* Destaca o texto quando um arquivo real (ex: Nunota.java) for carregado */
+.file-name.has-file {
+  color: #1f2937;
+}
+
+.icon-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: transparent;
+  transition: background-color 0.2s;
+}
+
+.upload-box:hover .icon-button {
+  background-color: rgba(221, 0, 116, 0.05);
+}
+
+.clip-icon {
+  width: 20px;
+  height: 20px;
+  fill: #6b7280;
+  transition: fill 0.2s;
+}
+
+.upload-box:hover .clip-icon {
+  fill: #dd0074; /* Ícone ganha a cor do Angular no hover */
+}

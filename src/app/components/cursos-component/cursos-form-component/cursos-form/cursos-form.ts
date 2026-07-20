@@ -1,5 +1,7 @@
 import { Component, DestroyRef, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -7,10 +9,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NotificationsService } from '../../../../shared/services/notifications.service';
-import { CursosService } from '../../cursos.service';
-import { MatButtonModule } from '@angular/material/button';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { map, switchMap } from 'rxjs';
+import { Cursos2Service } from '../../cursos2.service';
 
 @Component({
   selector: 'app-cursos-form',
@@ -36,7 +35,7 @@ export class CursosFormComponent {
   constructor(
     private formBuilder: FormBuilder,
     private router: Router,
-    private service: CursosService,
+    private service: Cursos2Service,
     private notificationService: NotificationsService,
     private route: ActivatedRoute,
   ) {}
