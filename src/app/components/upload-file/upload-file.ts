@@ -5,11 +5,12 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { UploadFileService } from './upload-file.service';
 import { HttpEventType } from '@angular/common/http';
+import { MatProgressBarModule } from "@angular/material/progress-bar";
 
 @Component({
   selector: 'app-upload-file',
   standalone: true,
-  imports: [MatButtonModule, MatFormFieldModule, MatIconModule, MatInputModule],
+  imports: [MatButtonModule, MatFormFieldModule, MatIconModule, MatInputModule, MatProgressBarModule],
   templateUrl: './upload-file.html',
   styleUrl: './upload-file.scss',
 })
