@@ -47,7 +47,7 @@ export class UploadFileComponent {
       this.isUploading = true;
       this.progress = 0;
 
-      this.service.upload(this.arquivosSelecionados, 'http://localhost:8080/upload').subscribe({
+      this.service.upload(this.arquivosSelecionados, '/api/upload').subscribe({
         next: (event) => {
           if (event.type === HttpEventType.UploadProgress && event.total) {
             this.progress = Math.round((event.loaded * 100) / event.total);
