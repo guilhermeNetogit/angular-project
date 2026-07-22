@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 export class UploadFileService {
   constructor(private http: HttpClient) {}
 
-  upload(files: File[], url: string): Observable<HttpEvent<unknown>> {
+  upload(files: File[], url: '/api/upload'): Observable<HttpEvent<unknown>> {
     const formData = new FormData();
 
     files.forEach((file) => formData.append('file', file, file.name));

@@ -5,16 +5,23 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { UploadFileService } from './upload-file.service';
 import { HttpEventType } from '@angular/common/http';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { filterReponse, uploadProgress } from '../../shared/rxjs-operators';
 
 @Component({
   selector: 'app-upload-file',
   standalone: true,
-  imports: [MatButtonModule, MatFormFieldModule, MatIconModule, MatInputModule],
+  imports: [
+    MatButtonModule,
+    MatFormFieldModule,
+    MatIconModule,
+    MatInputModule,
+    MatProgressBarModule,
+  ],
   templateUrl: './upload-file.html',
   styleUrl: './upload-file.scss',
 })
 export class UploadFileComponent {
-
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
 
   fileName: string = '';
@@ -25,7 +32,8 @@ export class UploadFileComponent {
 
   constructor(
     private service: UploadFileService,
-    private cdr: ChangeDetectorRef) {}
+    private cdr: ChangeDetectorRef,
+  ) {}
 
   onFileSelected(event: Event) {
     const input = event.target as HTMLInputElement;
@@ -33,9 +41,10 @@ export class UploadFileComponent {
     if (input.files && input.files.length > 0) {
       this.arquivosSelecionados = Array.from(input.files);
 
-      this.fileName = this.arquivosSelecionados.length === 1
-      ? this.arquivosSelecionados[0].name
-      : `${this.arquivosSelecionados.length} arquivos selecionados`
+      this.fileName =
+        this.arquivosSelecionados.length === 1
+          ? this.arquivosSelecionados[0].name
+          : `${this.arquivosSelecionados.length} arquivos selecionados`;
 
       this.progress = 0;
       this.isUploading = false;
@@ -47,26 +56,33 @@ export class UploadFileComponent {
       this.isUploading = true;
       this.progress = 0;
 
-      this.service.upload(this.arquivosSelecionados, 'http://localhost:8080/upload').subscribe({
-        next: (event) => {
-          if (event.type === HttpEventType.UploadProgress && event.total) {
-            this.progress = Math.round((event.loaded * 100) / event.total);
-          } else if (event.type === HttpEventType.Response) {
-            console.log('Upload concluído no servidor!');
-          }
-        },
-        error: (err) => {
-          console.error('Erro ao realizar upload:', err);
-          this.isUploading = false;
-          alert('Falha no envio do arquivo.');
-        },
-        complete: () => {
-          this.isUploading = false;
-          alert('Upload concluído com sucesso!');
+      this.service
+        .upload(this.arquivosSelecionados, '/api/upload')
+        .pipe(
+          uploadProgress((progress) => {
+            console.log(progress);
+            this.progress = progress;
+            this.cdr.detectChanges();
+          }),
+          filterReponse(),
+        )
+        .subscribe({
+          next: (responseBody) => {
+            console.log('Upload concluído no servidor!', responseBody);
 
-          this.limparFormulario();
-        }
-      });
+            this.limparFormulario();
+
+            setTimeout(() => {
+              alert('Upload concluído com sucesso!');
+            }, 50);
+          },
+          error: (err) => {
+            console.error('Erro ao realizar upload:', err);
+            this.isUploading = false;
+            this.cdr.detectChanges();
+            alert('Falha no envio do arquivo.');
+          },
+        });
     }
   }
 
@@ -74,9 +90,10 @@ export class UploadFileComponent {
     this.arquivosSelecionados = [];
     this.fileName = '';
     this.progress = 0;
+    this.isUploading = false;
 
     // Zera o valor do input nativo do HTML para liberar o campo
-    if (this.fileInput && this.fileInput.nativeElement) {
+    if (this.fileInput?.nativeElement) {
       this.fileInput.nativeElement.value = '';
     }
 
