@@ -25,8 +25,8 @@ const upload = multer({
 
 // Middleware de CORS: permite apenas a URL da sua app no Firebase
 app.use(cors({
-  origin: ['https://angular-project-dea7d.web.app', 'http://localhost:4300'],
-  methods: ['GET', 'POST', 'OPTIONS'],
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
@@ -35,11 +35,23 @@ app.use(express.urlencoded({ extended: true }));
 
 app.get('/', (req, res) => res.send('API de Upload rodando!'));
 
+// Rota de Upload (Aceita tanto /api/upload quanto /upload)
+const handleUpload = (req, res) => {
+  try {
+    console.log('Arquivos recebidos:', req.files?.length);
+    return res.status(200).json({
+      mensagem: 'Upload realizado com sucesso no Netlify!',
+      arquivos: req.files?.map(f => f.originalname)
+    });
+  } catch (error) {
+    console.error('Erro no processamento:', error);
+    return res.status(500).json({ erro: 'Falha ao processar arquivo' });
+  }
+};
+
 // Rota de Upload
-app.post('/.netlify/functions/api/upload', upload.array('file'), (req, res) => {
-  console.log('Arquivos recebidos:', req.files?.length);
-  res.json({ mensagem: 'Upload realizado com sucesso no Netlify!', arquivos: req.files?.map(f => f.originalname) });
-});
+app.post('/api/upload', upload.array('file'), handleUpload);
+app.post('/upload', upload.array('file'), handleUpload);
 
 // Apenas roda o listen se estiver rodando localmente no Node
 if (process.env.NODE_ENV !== 'production') {
