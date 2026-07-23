@@ -105,7 +105,7 @@ export class FormComponent implements OnInit {
     const cep = this.formulario.get('endereco.cep')?.value;
 
     this.cepService.buscarCep(cep).subscribe({
-      next: (dados) => {
+      next: (dados: any) => {
         if (dados && !dados.erro) {
           this.formulario.get('ddd')?.setValue(dados.ddd);
           this.formulario.get('endereco')?.patchValue({
@@ -120,7 +120,7 @@ export class FormComponent implements OnInit {
           this.resetarDadosForm();
         }
       },
-      error: (erro) => {
+      error: (erro: any) => {
         console.error('Erro ao buscar o CEP:', erro);
         this.resetarDadosForm();
       },
