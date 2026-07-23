@@ -1,22 +1,17 @@
 @if (initialData$ | async; as cursos) {
 
 <div class="demo-button-container">
-  <button matButton="elevated" class="demo-button"
-  [routerLink]="['novo']">
+  <button matButton="elevated" class="demo-button" [routerLink]="['novo']">
     Add
     <mat-icon>add</mat-icon>
   </button>
 
-  <button matButton="elevated" class="demo-button"
-  [disabled]="!selectedRow()"
-  (click)="onEdit()">
+  <button matButton="elevated" class="demo-button" [disabled]="!selectedRow()" (click)="onEdit()">
     Edit
     <mat-icon>edit</mat-icon>
   </button>
 
-  <button matButton="elevated" class="demo-button"
-  [disabled]="!selectedRow()"
-  (click)="onDelete('550ms', '350ms')">
+  <button matButton="elevated" class="demo-button" [disabled]="!selectedRow()" (click)="onDelete('550ms', '350ms')">
     Delete
     <mat-icon>delete</mat-icon>
   </button>

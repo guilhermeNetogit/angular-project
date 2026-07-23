@@ -45,3 +45,8 @@ __screenshots__/
 # System files
 .DS_Store
 Thumbs.db
+
+# Firebase temporary files
+.firebase/
+.firebaserc
+hosting.*.cache

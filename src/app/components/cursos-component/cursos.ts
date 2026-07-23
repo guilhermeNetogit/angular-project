@@ -16,6 +16,7 @@ import { Cursos2Service } from './cursos2.service';
 
 export interface PeriodicElement {
   id: number;
+  docId: string;
   name: string;
   position: number;
   weight: number;
@@ -45,6 +46,10 @@ export class CursosComponent implements OnInit {
   expandedElement: PeriodicElement | null = null;
 
   selectedRow = signal<any | null>(null);
+
+  trackById(index: number, item: PeriodicElement): any {
+    return item.docId || item.id || index;
+  }
 
   initialData$!: Observable<PeriodicElement[] | null>;
   private errorSubject = new BehaviorSubject<boolean>(false);
@@ -105,7 +110,10 @@ export class CursosComponent implements OnInit {
   onEdit(): void {
     const row = this.selectedRow();
     if (row) {
-      const id = row.id || row.position;
+
+      const id = row.docId ?? row.id;
+
+      console.log('ID selecionado para edição:', id);
       this.router.navigate(['cursos', 'editar', id]);
     }
   }
@@ -138,8 +146,8 @@ export class CursosComponent implements OnInit {
   }
 
   executarExclusao(registro: any) {
-    const idParaDeletar = registro.id || registro.position;
-    const nomeExibicao = registro.name || `ID ${idParaDeletar}`;
+    const idParaDeletar = registro.docId || registro.id;
+    const nomeExibicao = registro.name || `ID ${registro.id || registro.position}`;
 
     console.log('ID do Registro deletado:', idParaDeletar);
 

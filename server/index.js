@@ -13,10 +13,9 @@ if (!fs.existsSync(dir)) {
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, dir); // Salva na pasta correta que você pediu
+    cb(null, dir);
   },
   filename: function (req, file, cb) {
-    // Mantém o nome original do arquivo (Ex: Nunota.java) em vez do hash bagunçado
     cb(null, file.originalname);
   }
 });
@@ -30,36 +29,40 @@ const upload = multer({ storage: storage });
 
 // Configurações de Middleware
 //app.use(cors(corsOptions));
-app.use(express.json());// Substitui o antigo bodyParser.json()
+
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Rota de exemplo para upload de múltiplos arquivos
-app.post('/api/upload', (req, res, next) => {
-  // CORREÇÃO 2: Embrulhamos o multer em uma função manual para capturar o erro exato do upload
-  upload.array('file')(req, res, function (err) {
-    if (err) {
-      console.error('Erro específico do Multer:', err);
-      return res.status(500).json({ error: 'Erro no processamento do arquivo pelo Multer', detalhes: err.message });
-    }
-
-    const files = req.files;
-    console.log('Arquivos recebidos com sucesso:', files);
-
-    return res.send({
-      mensagem: 'Upload realizado com sucesso!',
-      dados: req.body,
-      arquivos: files
-    });
-  });
-});
-
-app.get('/api', (req, res) => res.send('API funcionando!'));
+app.get('/', (req, res) => res.send('API funcionando!'));
 
 app.use((err, req, res, next) => {
   console.error('Erro capturado:', err);
   res.status(500).json({ error: err.message });
 });
 
-app.listen(8080, () => {
-  console.log('Servidor rodando na porta 8080');
+// 1. Rota de teste
+app.get('/', (req, res) => res.send('API funcionando!'));
+
+// 2. Rota de Upload
+app.post('/api/upload', (req, res) => {
+  upload.array('file')(req, res, function (err) {
+    if (err) {
+      console.error('Erro no Multer:', err);
+      return res.status(500).json({ error: 'Erro no upload', detalhes: err.message });
+    }
+    return res.send({ mensagem: 'Upload realizado com sucesso!', arquivos: req.files });
+  });
 });
+
+// --- TRATAMENTO DE ERROS GLOBAL (Sempre após as rotas) ---
+app.use((err, req, res, next) => {
+  console.error('Erro capturado:', err);
+  res.status(500).json({ error: err.message });
+});
+
+// --- INICIALIZAÇÃO DO SERVIDOR (Sempre no final) ---
+app.listen(8080, () => {
+  console.log('🚀 Servidor rodando na porta 8080');
+  console.log('📍 Banco de dados configurado em:', dbPath);
+});
+

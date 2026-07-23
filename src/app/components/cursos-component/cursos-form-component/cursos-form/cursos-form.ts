@@ -52,7 +52,9 @@ export class CursosFormComponent {
     this.route.data.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: ({ curso }) => {
         if (curso) {
-          this.cursoId = this.cursoId;
+          this.cursoId = curso.docId || curso.id;
+
+          console.log('Curso carregado para edição. ID/Hash:', this.cursoId);
           this.form.patchValue(curso);
         }
       },
