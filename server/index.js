@@ -25,7 +25,9 @@ const upload = multer({
 
 // Middleware de CORS: permite apenas a URL da sua app no Firebase
 app.use(cors({
-  origin: ['https://angular-project-dea7d.web.app', 'http://localhost:4300']
+  origin: ['https://angular-project-dea7d.web.app', 'http://localhost:4300'],
+  methods: ['GET', 'POST', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
 app.use(express.json());
@@ -51,10 +53,4 @@ module.exports = app;
 app.use((err, req, res, next) => {
   console.error('Erro capturado:', err);
   res.status(500).json({ error: err.message });
-});
-
-// A porta deve ser a fornecida pelo servidor na nuvem (process.env.PORT) ou 8080 local
-const PORT = process.env.PORT || 8080;
-app.listen(PORT, () => {
-  console.log(`🚀 Servidor rodando na porta ${PORT}`);
 });

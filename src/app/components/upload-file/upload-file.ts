@@ -54,22 +54,17 @@ export class UploadFileComponent {
       this.isUploading = true;
       this.progress = 0;
 
-      this.service.uploadToFirebase(this.arquivosSelecionados).subscribe({
-        next: (result) => {
-          this.progress = result.progress;
-          this.cdr.detectChanges();
+      this.service.upload(this.arquivosSelecionados).subscribe({
+        next: (result: any) => {
+          console.log('Upload concluído no servidor:', result);
 
-          if (result.completed) {
-            console.log('Upload concluído no Firabase Storage! URLs:', result.downloadURL);
+          this.limparFormulario();
 
-            this.limparFormulario();
-
-            setTimeout(() => {
-              alert('Upload concluído com sucesso!');
-            }, 50);
-          }
+          setTimeout(() => {
+            alert('Upload concluído com sucesso!');
+          }, 50);
         },
-        error: (err) => {
+        error: (err: any) => {
           console.error('Erro ao realizar upload:', err);
           this.isUploading = false;
           this.cdr.detectChanges();
