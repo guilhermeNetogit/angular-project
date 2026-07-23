@@ -1,68 +1,60 @@
 const express = require('express');
-//const cors = require('cors');
+const cors = require('cors');
 const multer = require('multer');
 const fs = require('fs');
 const path = require('path');
 
 const app = express();
 
-const dir = './server/uploads';
+// Garante a criação da pasta de uploads
+const dir = path.join(__dirname, 'uploads');
 if (!fs.existsSync(dir)) {
   fs.mkdirSync(dir, { recursive: true });
 }
 
+// Configuração do Multer
 const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, dir);
-  },
-  filename: function (req, file, cb) {
-    cb(null, file.originalname);
-  }
+  destination: (req, file, cb) => cb(null, dir),
+  filename: (req, file, cb) => cb(null, file.originalname)
 });
 
-const upload = multer({ storage: storage });
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 20 * 1024 * 1024 } // Limite opcional de 10MB
+});
 
-//const corsOptions = {
-//  origin: 'http://localhost:4300',
-//  optionsSuccessStatus: 200
-//};
-
-// Configurações de Middleware
-//app.use(cors(corsOptions));
+// Middleware de CORS: permite apenas a URL da sua app no Firebase
+app.use(cors({
+  origin: ['https://angular-project-dea7d.web.app', 'http://localhost:4300']
+}));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.get('/', (req, res) => res.send('API funcionando!'));
+app.get('/', (req, res) => res.send('API de Upload rodando!'));
 
+// Rota de Upload
+app.post('/.netlify/functions/api/upload', upload.array('file'), (req, res) => {
+  console.log('Arquivos recebidos:', req.files?.length);
+  res.json({ mensagem: 'Upload realizado com sucesso no Netlify!', arquivos: req.files?.map(f => f.originalname) });
+});
+
+// Apenas roda o listen se estiver rodando localmente no Node
+if (process.env.NODE_ENV !== 'production') {
+  const PORT = process.env.PORT || 8080;
+  app.listen(PORT, () => console.log(`Rodando na porta ${PORT}`));
+}
+
+module.exports = app;
+
+// Tratamento de erros
 app.use((err, req, res, next) => {
   console.error('Erro capturado:', err);
   res.status(500).json({ error: err.message });
 });
 
-// 1. Rota de teste
-app.get('/', (req, res) => res.send('API funcionando!'));
-
-// 2. Rota de Upload
-app.post('/api/upload', (req, res) => {
-  upload.array('file')(req, res, function (err) {
-    if (err) {
-      console.error('Erro no Multer:', err);
-      return res.status(500).json({ error: 'Erro no upload', detalhes: err.message });
-    }
-    return res.send({ mensagem: 'Upload realizado com sucesso!', arquivos: req.files });
-  });
+// A porta deve ser a fornecida pelo servidor na nuvem (process.env.PORT) ou 8080 local
+const PORT = process.env.PORT || 8080;
+app.listen(PORT, () => {
+  console.log(`🚀 Servidor rodando na porta ${PORT}`);
 });
-
-// --- TRATAMENTO DE ERROS GLOBAL (Sempre após as rotas) ---
-app.use((err, req, res, next) => {
-  console.error('Erro capturado:', err);
-  res.status(500).json({ error: err.message });
-});
-
-// --- INICIALIZAÇÃO DO SERVIDOR (Sempre no final) ---
-app.listen(8080, () => {
-  console.log('🚀 Servidor rodando na porta 8080');
-  console.log('📍 Banco de dados configurado em:', dbPath);
-});
-

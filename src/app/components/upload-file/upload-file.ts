@@ -3,10 +3,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { UploadFileService } from './upload-file.service';
-import { HttpEventType } from '@angular/common/http';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { filterReponse, uploadProgress } from '../../shared/rxjs-operators';
+import { UploadFileService } from './upload-file.service';
 
 @Component({
   selector: 'app-upload-file',
@@ -56,33 +54,28 @@ export class UploadFileComponent {
       this.isUploading = true;
       this.progress = 0;
 
-      this.service
-        .upload(this.arquivosSelecionados, '/api/upload')
-        .pipe(
-          uploadProgress((progress) => {
-            console.log(progress);
-            this.progress = progress;
-            this.cdr.detectChanges();
-          }),
-          filterReponse(),
-        )
-        .subscribe({
-          next: (responseBody) => {
-            console.log('Upload concluído no servidor!', responseBody);
+      this.service.uploadToFirebase(this.arquivosSelecionados).subscribe({
+        next: (result) => {
+          this.progress = result.progress;
+          this.cdr.detectChanges();
+
+          if (result.completed) {
+            console.log('Upload concluído no Firabase Storage! URLs:', result.downloadURL);
 
             this.limparFormulario();
 
             setTimeout(() => {
               alert('Upload concluído com sucesso!');
             }, 50);
-          },
-          error: (err) => {
-            console.error('Erro ao realizar upload:', err);
-            this.isUploading = false;
-            this.cdr.detectChanges();
-            alert('Falha no envio do arquivo.');
-          },
-        });
+          }
+        },
+        error: (err) => {
+          console.error('Erro ao realizar upload:', err);
+          this.isUploading = false;
+          this.cdr.detectChanges();
+          alert('Falha no envio do arquivo.');
+        },
+      });
     }
   }
 
