@@ -5,6 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { UploadFileService } from './upload-file.service';
+import { HttpEventType, HttpResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-upload-file',
@@ -55,14 +56,22 @@ export class UploadFileComponent {
       this.progress = 0;
 
       this.service.upload(this.arquivosSelecionados).subscribe({
-        next: (result: any) => {
-          console.log('Upload concluído no servidor:', result);
+        next: (event: any) => {
+          // Atualiza a barra de progresso do upload
+          if (event.type === HttpEventType.UploadProgress && event.total) {
+            this.progress = Math.round((100 * event.loaded) / event.total);
+            this.cdr.detectChanges();
+          }
+          // Executa Apenas no evento final da resposta (HttpResponse)
+          else if (event instanceof HttpResponse || event.body) {
+            console.log('Upload concluído com sucesso no servidor:', event.body || event);
 
-          this.limparFormulario();
+            this.limparFormulario();
 
-          setTimeout(() => {
-            alert('Upload concluído com sucesso!');
-          }, 50);
+            setTimeout(() => {
+              alert('Upload concluído com sucesso!');
+            }, 50);
+          }
         },
         error: (err: any) => {
           console.error('Erro ao realizar upload:', err);
