@@ -26,26 +26,18 @@ exports.handler = async (event, context) => {
   }
 
   try {
-    if (!process.env.CLOUDINARY_CLOUD_NAME || !process.env.CLOUDINARY_API_KEY || !process.env.CLOUDINARY_API_SECRET) {
-      throw new Error('Variáveis de ambiente do Cloudinary não encontradas no Netlify.');
+    const { file, fileName } = JSON.parse(event.body);
+
+    if (!file) {
+      throw new Error('Nenhum arquivo enviado.');
     }
 
-    // Pega o buffer do arquivo recebido na requisição
-    const fileBuffer = Buffer.from(event.body, event.isBase64Encoded ? 'base64' : 'utf8');
-
-    // Faz o upload via Stream para o Cloudinary identificar o tipo nativo do arquivo
-    const uploadResult = await new Promise((resolve, reject) => {
-      const uploadStream = cloudinary.uploader.upload_stream(
-        {
-          folder: 'angular_uploads',
-          resource_type: 'auto', // Identifica automaticamente se é imagem, vídeo, PDF, etc.
-        },
-        (error, result) => {
-          if (error) return reject(error);
-          resolve(result);
-        }
-      );
-      uploadStream.end(fileBuffer);
+    // Upload direto da Data URI para o Cloudinary
+    const uploadResult = await cloudinary.uploader.upload(file, {
+      folder: 'angular_uploads',
+      resource_type: 'auto', // Identifica automaticamente png, jpg, pdf, mp4, etc.
+      filename_override: fileName,
+      use_filename: true,
     });
 
     return {
@@ -55,7 +47,8 @@ exports.handler = async (event, context) => {
         mensagem: 'Upload realizado com sucesso no Cloudinary!',
         url: uploadResult.secure_url,
         public_id: uploadResult.public_id,
-        format: uploadResult.format,
+        format: uploadResult.format, // Agora vai retornar png, jpg, pdf, etc.
+        resource_type: uploadResult.resource_type
       }),
     };
   } catch (error) {

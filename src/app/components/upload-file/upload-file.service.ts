@@ -1,12 +1,6 @@
-import { HttpClient, HttpEvent, HttpRequest } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-
-export interface UploadProgressResult {
-  progress: number;
-  downloadURL?: string;
-  completed: boolean;
-}
 
 @Injectable({
   providedIn: 'root',
@@ -16,16 +10,29 @@ export class UploadFileService {
 
   constructor(private http: HttpClient) {}
 
-  upload(files: File[]): Observable<HttpEvent<unknown>> {
-    const formData = new FormData();
+  uploadFile(file: File): Observable<any> {
+    return new Observable((observer) => {
+      const reader = new FileReader();
 
-    files.forEach((file) => formData.append('file', file, file.name));
+      // Lê o arquivo como Data URL (ex: "data:image/jpeg;base64,/9j/4AAQSkZJRg...")
+      reader.readAsDataURL(file);
 
-    const request = new HttpRequest('POST', this.API_URL, formData, {
-      reportProgress: true,
-      responseType: 'json',
+      reader.onload = () => {
+        const payload = {
+          file: reader.result, // Envia a Data URL completa com tipo e extensão
+          fileName: file.name,
+        };
+
+        this.http.post(this.API_URL, payload).subscribe({
+          next: (res) => {
+            observer.next(res);
+            observer.complete();
+          },
+          error: (err) => observer.error(err),
+        });
+      };
+
+      reader.onerror = (error) => observer.error(error);
     });
-
-    return this.http.request(request);
   }
 }
