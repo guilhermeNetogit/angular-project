@@ -5,7 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { UploadFileService } from './upload-file.service';
-import { HttpEventType, HttpResponse } from '@angular/common/http';
+import { HttpEventType } from '@angular/common/http';
 
 @Component({
   selector: 'app-upload-file',
@@ -57,20 +57,22 @@ export class UploadFileComponent {
 
       this.service.upload(this.arquivosSelecionados).subscribe({
         next: (event: any) => {
-          // Atualiza a barra de progresso do upload
+          // Atualiza a barra de progresso durante o envio
           if (event.type === HttpEventType.UploadProgress && event.total) {
             this.progress = Math.round((100 * event.loaded) / event.total);
             this.cdr.detectChanges();
           }
-          // Executa Apenas no evento final da resposta (HttpResponse)
-          else if (event instanceof HttpResponse || event.body) {
-            console.log('Upload concluído com sucesso no servidor:', event.body || event);
+          // Dispara quando o Cloudinary devolve a resposta final de sucesso
+          else if (event.type === HttpEventType.Response) {
+            this.progress = 100;
+            this.cdr.detectChanges();
 
-            this.limparFormulario();
+            console.log('Upload concluído com sucesso no servidor:', event.body);
 
             setTimeout(() => {
               alert('Upload concluído com sucesso!');
-            }, 50);
+              this.limparFormulario(); // Limpa o formulário DEPOIS do alerta
+            }, 100);
           }
         },
         error: (err: any) => {
@@ -89,7 +91,6 @@ export class UploadFileComponent {
     this.progress = 0;
     this.isUploading = false;
 
-    // Zera o valor do input nativo do HTML para liberar o campo
     if (this.fileInput?.nativeElement) {
       this.fileInput.nativeElement.value = '';
     }
