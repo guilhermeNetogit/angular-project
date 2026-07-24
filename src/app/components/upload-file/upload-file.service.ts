@@ -15,10 +15,11 @@ export class UploadFileService {
     const file = files[0];
     const resourceType = this.getResourceType(file);
 
-    // Define a URL dinâmica baseada no tipo real do arquivo (image, video ou raw)
+    // Define a rota dinâmica para a API do Cloudinary baseada no tipo do arquivo
     const url = `https://api.cloudinary.com/v1_1/${this.CLOUD_NAME}/${resourceType}/upload`;
 
     const formData = new FormData();
+    // O 3º argumento (file.name) garante a extensão (.jpg, .mp3, .pdf) no Cloudinary
     formData.append('file', file, file.name);
     formData.append('upload_preset', this.UPLOAD_PRESET);
     formData.append('folder', 'angular_uploads');
@@ -26,7 +27,7 @@ export class UploadFileService {
     return this.http.post(url, formData);
   }
 
-  // Função auxiliar para determinar a rota correta do Cloudinary
+  // Identifica o endpoint exato do Cloudinary
   private getResourceType(file: File): 'image' | 'video' | 'raw' {
     const mimeType = file.type.toLowerCase();
 
@@ -34,10 +35,10 @@ export class UploadFileService {
       return 'image';
     }
     if (mimeType.startsWith('video/') || mimeType.startsWith('audio/')) {
-      // Vídeos e áudios (MP3, WAV, MP4) usam o endpoint 'video'
+      // Áudios (.mp3, .wav) e vídeos usam a rota 'video' no Cloudinary
       return 'video';
     }
-    // PDFs, ZIPs, DOCX e demais arquivos usam 'raw'
+    // Arquivos como PDF, ZIP, DOCX usam a rota 'raw'
     return 'raw';
   }
 }
