@@ -10,7 +10,10 @@ export class UploadFileService {
 
   constructor(private http: HttpClient) {}
 
-  uploadFile(file: File): Observable<any> {
+  upload(files: File[]): Observable<any> {
+
+    const file = files[0];
+
     return new Observable((observer) => {
       const reader = new FileReader();
 
