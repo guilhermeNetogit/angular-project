@@ -26,24 +26,46 @@ exports.handler = async (event, context) => {
   }
 
   try {
-    // 1. Tratamento essencial no Netlify: decodifica o body caso venha em Base64
-    let bodyString = event.body;
-    if (event.isBase64Encoded) {
-      bodyString = Buffer.from(event.body, 'base64').toString('utf8');
+    if (!event.body) {
+      throw new Error('Corpo da requisição veio vazio.');
     }
 
-    const { file, fileName } = JSON.parse(bodyString);
+    let fileToUpload = null;
+    let fileName = 'upload_file';
 
-    if (!file) {
-      throw new Error('Nenhum arquivo (Data URI) foi fornecido no payload.');
+    // 1. Tenta interpretar como JSON (se veio em formato { file: "data:...", fileName: "..." })
+    try {
+      let rawBody = event.body;
+      if (event.isBase64Encoded) {
+        rawBody = Buffer.from(event.body, 'base64').toString('utf8');
+      }
+      const parsed = JSON.parse(rawBody);
+      if (parsed && parsed.file) {
+        fileToUpload = parsed.file;
+        fileName = parsed.fileName || fileName;
+      }
+    } catch (jsonErr) {
+      // 2. SE NÃO FOR JSON (Fallback): Trata o corpo bruto enviado pelo Angular
+      if (event.isBase64Encoded) {
+        // Se já vem em base64 do Netlify, montamos a Data URI direta
+        fileToUpload = `data:application/octet-stream;base64,${event.body}`;
+      } else {
+        // Se veio em buffer bruto
+        const base64Data = Buffer.from(event.body).toString('base64');
+        fileToUpload = `data:application/octet-stream;base64,${base64Data}`;
+      }
     }
 
-    // 2. Envia a Data URI direta para o Cloudinary
-    const uploadResult = await cloudinary.uploader.upload(file, {
+    if (!fileToUpload) {
+      throw new Error('Não foi possível extrair o arquivo do corpo da requisição.');
+    }
+
+    // 3. Envia para o Cloudinary com detecção automática do formato nativo do arquivo
+    const uploadResult = await cloudinary.uploader.upload(fileToUpload, {
       folder: 'angular_uploads',
-      resource_type: 'auto', // Detecta automaticamente imagens, vídeos, PDFs, etc.
-      use_filename: true,
+      resource_type: 'auto', // Detecta se é PNG, JPG, PDF, MP4, etc.
       filename_override: fileName,
+      use_filename: true,
     });
 
     return {
