@@ -53,31 +53,38 @@ export class UploadFileComponent {
   onUpload() {
     if (this.arquivosSelecionados.length > 0) {
       this.isUploading = true;
-      this.progress = 0;
+      this.progress = 10; // Já inicia a barra para o usuário ver o feedback visual
+      this.cdr.detectChanges();
 
       this.service.upload(this.arquivosSelecionados).subscribe({
         next: (event: any) => {
-          // Atualiza a barra de progresso durante o envio
-          if (event.type === HttpEventType.UploadProgress && event.total) {
+          // Se for evento de progresso do Angular
+          if (event?.type === HttpEventType.UploadProgress && event.total) {
             this.progress = Math.round((100 * event.loaded) / event.total);
             this.cdr.detectChanges();
           }
-          // Dispara quando o Cloudinary devolve a resposta final de sucesso
-          else if (event.type === HttpEventType.Response) {
+          // Se o evento final chegou (Response de sucesso ou se veio qualquer body com url/public_id do Cloudinary)
+          else if (
+            event?.type === HttpEventType.Response ||
+            event?.body ||
+            event?.public_id ||
+            event?.secure_url
+          ) {
             this.progress = 100;
             this.cdr.detectChanges();
 
-            console.log('Upload concluído com sucesso no servidor:', event.body);
+            console.log('Upload concluído no Cloudinary:', event);
 
             setTimeout(() => {
               alert('Upload concluído com sucesso!');
-              this.limparFormulario(); // Limpa o formulário DEPOIS do alerta
-            }, 100);
+              this.limparFormulario();
+            }, 150);
           }
         },
         error: (err: any) => {
           console.error('Erro ao realizar upload:', err);
           this.isUploading = false;
+          this.progress = 0;
           this.cdr.detectChanges();
           alert('Falha no envio do arquivo.');
         },
