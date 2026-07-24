@@ -16,7 +16,7 @@ export class UploadFileService {
     const file = files[0];
     const formData = new FormData();
 
-    formData.append('file', file);
+    formData.append('file', file, file.name);
     formData.append('upload_preset', this.UPLOAD_PRESET);
     formData.append('folder', 'angular_uploads');
 
