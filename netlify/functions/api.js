@@ -1,6 +1,6 @@
 const cloudinary = require('cloudinary').v2;
 
-// Configuração do Cloudinary lendo das variáveis do ambiente Netlify
+// Configura o Cloudinary lendo das variáveis do Netlify
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
@@ -27,19 +27,17 @@ exports.handler = async (event, context) => {
   }
 
   try {
-    // Decodifica o buffer recebido do upload
-    const bodyBuffer = Buffer.from(event.body, event.isBase64Encoded ? 'base64' : 'utf8');
+    // Checa se as variáveis foram carregadas no Netlify
+    if (!process.env.CLOUDINARY_CLOUD_NAME || !process.env.CLOUDINARY_API_KEY || !process.env.CLOUDINARY_API_SECRET) {
+      throw new Error('Variáveis de ambiente do Cloudinary não encontradas no Netlify.');
+    }
 
-    // Faz o upload direto para o Cloudinary via stream/buffer
-    const uploadResult = await new Promise((resolve, reject) => {
-      const uploadStream = cloudinary.uploader.upload_stream(
-        { folder: 'angular_uploads' }, // Pasta que será criada no Cloudinary
-        (error, result) => {
-          if (error) return reject(error);
-          resolve(result);
-        }
-      );
-      uploadStream.end(bodyBuffer);
+    const fileBuffer = Buffer.from(event.body, event.isBase64Encoded ? 'base64' : 'utf8');
+    const base64Content = `data:image/png;base64,${fileBuffer.toString('base64')}`;
+
+    const uploadResult = await cloudinary.uploader.upload(base64Content, {
+      folder: 'angular_uploads',
+      resource_type: 'auto',
     });
 
     return {
@@ -47,16 +45,19 @@ exports.handler = async (event, context) => {
       headers,
       body: JSON.stringify({
         mensagem: 'Upload realizado com sucesso no Cloudinary!',
-        url: uploadResult.secure_url, // URL permanente pública gerada
+        url: uploadResult.secure_url,
         public_id: uploadResult.public_id,
       }),
     };
   } catch (error) {
-    console.error('Erro no Cloudinary:', error);
+    console.error('Erro na Netlify Function:', error);
     return {
       statusCode: 500,
       headers,
-      body: JSON.stringify({ error: 'Falha ao salvar o arquivo no Cloudinary.' }),
+      body: JSON.stringify({
+        error: 'Falha no upload para o Cloudinary.',
+        detalhe: error.message || error,
+      }),
     };
   }
 };
