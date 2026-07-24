@@ -26,18 +26,21 @@ exports.handler = async (event, context) => {
   }
 
   try {
-    const { file, fileName } = JSON.parse(event.body);
+    // Lê o JSON enviado pelo Angular
+    const body = JSON.parse(event.body);
+    const fileDataUri = body.file;
+    const fileName = body.fileName;
 
-    if (!file) {
-      throw new Error('Nenhum arquivo enviado.');
+    if (!fileDataUri) {
+      throw new Error('Nenhum arquivo encontrado no corpo da requisição.');
     }
 
-    // Upload direto da Data URI para o Cloudinary
-    const uploadResult = await cloudinary.uploader.upload(file, {
+    // Envia a Data URI direta para o Cloudinary
+    const uploadResult = await cloudinary.uploader.upload(fileDataUri, {
       folder: 'angular_uploads',
-      resource_type: 'auto', // Identifica automaticamente png, jpg, pdf, mp4, etc.
-      filename_override: fileName,
+      resource_type: 'auto', // Detecta automaticamente PNG, JPG, PDF, MP4, etc.
       use_filename: true,
+      filename_override: fileName,
     });
 
     return {
@@ -47,8 +50,8 @@ exports.handler = async (event, context) => {
         mensagem: 'Upload realizado com sucesso no Cloudinary!',
         url: uploadResult.secure_url,
         public_id: uploadResult.public_id,
-        format: uploadResult.format, // Agora vai retornar png, jpg, pdf, etc.
-        resource_type: uploadResult.resource_type
+        format: uploadResult.format,
+        resource_type: uploadResult.resource_type,
       }),
     };
   } catch (error) {
@@ -57,7 +60,7 @@ exports.handler = async (event, context) => {
       statusCode: 500,
       headers,
       body: JSON.stringify({
-        error: 'Falha ao processar arquivo no Cloudinary.',
+        error: 'Falha ao processar arquivo.',
         detalhe: error.message || String(error),
       }),
     };
