@@ -20,7 +20,7 @@ export class UploadFileService {
     formData.append('upload_preset', this.UPLOAD_PRESET);
     formData.append('folder', 'angular_uploads');
 
-    return this.http.post(url, formData, {
+    return this.http.post<HttpEvent<any>>(url, formData, {
       reportProgress: true,
       observe: 'events',
     });
