@@ -4,8 +4,8 @@
   functions = "netlify/functions"
 
 [[redirects]]
-  from = "/api/*"
-  to = "/.netlify/functions/api/:splat"
+  from = "/api/upload"
+  to = "/.netlify/functions/api"
   status = 200
 
 [[headers]]
