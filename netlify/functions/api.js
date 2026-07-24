@@ -26,19 +26,22 @@ exports.handler = async (event, context) => {
   }
 
   try {
-    // Lê o JSON enviado pelo Angular
-    const body = JSON.parse(event.body);
-    const fileDataUri = body.file;
-    const fileName = body.fileName;
-
-    if (!fileDataUri) {
-      throw new Error('Nenhum arquivo encontrado no corpo da requisição.');
+    // 1. Tratamento essencial no Netlify: decodifica o body caso venha em Base64
+    let bodyString = event.body;
+    if (event.isBase64Encoded) {
+      bodyString = Buffer.from(event.body, 'base64').toString('utf8');
     }
 
-    // Envia a Data URI direta para o Cloudinary
-    const uploadResult = await cloudinary.uploader.upload(fileDataUri, {
+    const { file, fileName } = JSON.parse(bodyString);
+
+    if (!file) {
+      throw new Error('Nenhum arquivo (Data URI) foi fornecido no payload.');
+    }
+
+    // 2. Envia a Data URI direta para o Cloudinary
+    const uploadResult = await cloudinary.uploader.upload(file, {
       folder: 'angular_uploads',
-      resource_type: 'auto', // Detecta automaticamente PNG, JPG, PDF, MP4, etc.
+      resource_type: 'auto', // Detecta automaticamente imagens, vídeos, PDFs, etc.
       use_filename: true,
       filename_override: fileName,
     });
@@ -55,12 +58,12 @@ exports.handler = async (event, context) => {
       }),
     };
   } catch (error) {
-    console.error('Erro no Cloudinary:', error);
+    console.error('Erro na Netlify Function:', error);
     return {
       statusCode: 500,
       headers,
       body: JSON.stringify({
-        error: 'Falha ao processar arquivo.',
+        error: 'Falha ao processar upload.',
         detalhe: error.message || String(error),
       }),
     };
