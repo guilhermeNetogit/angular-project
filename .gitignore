@@ -50,3 +50,6 @@ Thumbs.db
 .firebase/
 .firebaserc
 hosting.*.cache
+
+.dockerignore
+compose.yaml
