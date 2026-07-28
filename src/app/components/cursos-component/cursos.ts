@@ -1,12 +1,13 @@
 import { AsyncPipe } from '@angular/common';
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnInit, signal, ViewChild } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { MatTableModule } from '@angular/material/table';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { Router, RouterLink } from '@angular/router';
 import { BehaviorSubject, catchError, delay, Observable, of, switchMap, tap } from 'rxjs';
 
@@ -33,6 +34,7 @@ export interface PeriodicElement {
     MatTableModule,
     MatButtonModule,
     MatIconModule,
+    MatPaginatorModule,
     MatProgressBarModule,
     MatSnackBarModule,
     RouterLink,
@@ -47,6 +49,8 @@ export class CursosComponent implements OnInit {
 
   selectedRow = signal<any | null>(null);
 
+  dataSource = new MatTableDataSource<PeriodicElement>([]);
+
   trackById(index: number, item: PeriodicElement): any {
     return item.docId || item.id || index;
   }
@@ -60,10 +64,18 @@ export class CursosComponent implements OnInit {
   readonly dialog = inject(MatDialog);
   private snackBar = inject(MatSnackBar);
 
+  private cdr = inject(ChangeDetectorRef);
+
   constructor(
     private service: Cursos2Service,
     private router: Router,
   ) {}
+
+  @ViewChild(MatPaginator) set paginator(paginator: MatPaginator) {
+    if (paginator) {
+      this.dataSource.paginator = paginator;
+    }
+  }
 
   ngOnInit() {
     this.initialData$ = this.reloadSubject.pipe(
@@ -78,6 +90,12 @@ export class CursosComponent implements OnInit {
           }),
         ),
       ),
+      tap((dados) => {
+        if (dados) {
+          this.dataSource.data = dados;
+          this.cdr.detectChanges();
+        }
+      }),
     );
   }
 
@@ -110,7 +128,6 @@ export class CursosComponent implements OnInit {
   onEdit(): void {
     const row = this.selectedRow();
     if (row) {
-
       const id = row.docId ?? row.id;
 
       console.log('ID selecionado para edição:', id);

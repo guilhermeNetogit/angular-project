@@ -17,7 +17,7 @@
   </button>
 </div>
 
-<table mat-table [dataSource]="cursos" multiTemplateDataRows class="mat-shadow-2">
+<table mat-table [dataSource]="dataSource" multiTemplateDataRows class="mat-shadow-2">
   @for (column of columnsToDisplay; track column) {
   <ng-container matColumnDef="{{column}}">
     <th mat-header-cell *matHeaderCellDef>{{column}}</th>
@@ -60,6 +60,14 @@
   </tr>
   <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
 </table>
+
+<mat-paginator [length]="100"
+              [pageSize]="10"
+              [pageSizeOptions]="[5, 10, 25, 100]"
+              showFirstLastButtons
+              aria-label="Select page">
+</mat-paginator>
+
 } @else {
 
 @if (error$ | async) {
@@ -81,6 +89,4 @@
 <p class="loading-text">Carregando dados...</p>
 <mat-progress-bar mode="indeterminate"></mat-progress-bar>
 }
-
-
 }
