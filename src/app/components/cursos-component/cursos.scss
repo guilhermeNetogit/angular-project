@@ -1,7 +1,7 @@
 @use '@angular/material' as mat;
 
 table {
-  width: 100%;
+  width: 450px;
 }
 
 tr.example-detail-row {
@@ -128,4 +128,32 @@ tr.example-element-row:not(.example-expanded-row):active {
   margin-top: 20px;
   font-style: italic;
   color: #666;
+}
+
+/* Garante que o container interno do paginator não quebre linhas */
+mat-paginator {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  width: 450px;
+
+  ::ng-deep .mat-mdc-paginator-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: nowrap !important; /* Impede quebrar linha */
+    min-height: 48px;
+    padding: 0 8px;
+  }
+
+  ::ng-deep .mat-mdc-paginator-page-size {
+    display: flex;
+    align-items: center;
+  }
+
+  ::ng-deep .mat-mdc-paginator-range-actions {
+    display: flex;
+    align-items: center;
+    white-space: nowrap; /* Garante que o texto '1 - 10 de 100' fique junto */
+  }
 }
