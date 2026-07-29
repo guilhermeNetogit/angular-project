@@ -19,9 +19,37 @@ export class AuthService {
   mostrarMenuEmitter = new EventEmitter<boolean>();
 
   private usuariosValidos = [
-    { login: 'guilherme.neto', senha: '123456' },
-    { login: 'guest', senha: '654321' }
+    { login: 'guilherme.neto', prefixoPass: 'Gig@' },
+    { login: 'guest', prefixoPass: 'Guest#' }
   ];
+
+  geraPass(data: Date, prefixo: string): string {
+    const dia = String(data.getDate()).padStart(2, '0');
+    const mes = String(data.getMonth() + 1).padStart(2, '0');
+    const hora = String(data.getHours()).padStart(2, '0');
+    const minuto = String(data.getMinutes()).padStart(2, '0');
+
+    return `${prefixo}${dia}${mes}${hora}${minuto}`;
+  }
+
+  validaLogin(loginInformado: string, senhaInformada: string): boolean {
+
+    const usuario = this.usuariosValidos.find(u => u.login === loginInformado);
+
+    if (!usuario) {
+      return false;
+    }
+
+    // Cria duas instâncias de tempo: agora e 1 minuto atrás (tolerância)
+    const agora = new Date();
+    const umMinutoAtras = new Date(agora.getTime() - 60000);
+
+    // Gera as duas senhas possíveis para o prefixo deste usuário
+    const senhaAtual = this.geraPass(agora, usuario.prefixoPass);
+    const senhaAnterior = this.geraPass(umMinutoAtras, usuario.prefixoPass);
+
+    return senhaInformada === senhaAtual || senhaInformada === senhaAnterior;
+  }
 
   userIsAuthenticated() {
     return this.userAuthenticated;
@@ -39,12 +67,10 @@ export class AuthService {
 
   fazerLogin(user: User) {
 
-    const usuarioEncontrado = this.usuariosValidos.find(
-      u => u.login === user.login && u.senha === user.senha
+    const loginValido = this.validaLogin(user.login, user.senha
     );
-    if (usuarioEncontrado) {
+    if (loginValido) {
       this.userAuthenticated = true;
-
       this.mensagemErro.set(null);
 
       sessionStorage.setItem('userName', user.login);

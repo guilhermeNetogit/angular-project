@@ -157,3 +157,13 @@ mat-paginator {
     white-space: nowrap; /* Garante que o texto '1 - 10 de 100' fique junto */
   }
 }
+
+.example-element-description-attribution a {
+  color: inherit;         /* Mantém a cor do texto do elemento pai */
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.example-element-description-attribution a:hover {
+  background: #d8d8d8;
+}
