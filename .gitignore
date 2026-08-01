@@ -53,3 +53,6 @@ hosting.*.cache
 
 .dockerignore
 compose.yaml
+
+
+src/environments/users.cfg.ts
