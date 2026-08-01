@@ -1,27 +1,36 @@
 import { Router } from '@angular/router';
 import { computed, EventEmitter, Injectable, signal } from '@angular/core';
 import { User } from '../user';
+import { USUARIOS_VALIDOS } from '../../../../environments/users.cfg';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
+  private SESSION_KEY = 'userName';
 
-  usuarioAtual = signal<string | null>(null);
+  usuarioAtual = signal<string | null>(sessionStorage.getItem(this.SESSION_KEY));
 
-  exibirMenuManual = signal<boolean>(false);
+  exibirMenuManual = signal<boolean>(!!sessionStorage.getItem(this.SESSION_KEY));
 
   mostrarMenu = computed(() => this.usuarioAtual() !== null || this.exibirMenuManual());
 
   mensagemErro = signal<string | null>(null);
 
-  private userAuthenticated: boolean = false;
+  private userAuthenticated: boolean = !!sessionStorage.getItem(this.SESSION_KEY);
   mostrarMenuEmitter = new EventEmitter<boolean>();
 
-  private usuariosValidos = [
-    { login: 'guilherme.neto', prefixoPass: 'Gig@' },
-    { login: 'guest', prefixoPass: 'Guest#' }
-  ];
+  private usuariosValidos = USUARIOS_VALIDOS;
+
+  constructor(private router: Router) {
+
+    const usuarioSalvo = sessionStorage.getItem(this.SESSION_KEY);
+      if (usuarioSalvo) {
+        this.userAuthenticated = true;
+        this.usuarioAtual.set(usuarioSalvo);
+        this.exibirMenuManual.set(true);
+      }
+  }
 
   geraPass(data: Date, prefixo: string): string {
     const dia = String(data.getDate()).padStart(2, '0');
@@ -51,18 +60,8 @@ export class AuthService {
     return senhaInformada === senhaAtual || senhaInformada === senhaAnterior;
   }
 
-  userIsAuthenticated() {
-    return this.userAuthenticated;
-  }
-
-  constructor(private router: Router) {
-
-    const usuarioSalvo = sessionStorage.getItem('userName');
-      if (usuarioSalvo) {
-        this.userAuthenticated = true;
-        this.usuarioAtual.set(usuarioSalvo);
-        this.exibirMenuManual.set(true);
-      }
+  userIsAuthenticated(): boolean {
+    return !!sessionStorage.getItem(this.SESSION_KEY);
   }
 
   fazerLogin(user: User) {
@@ -73,7 +72,7 @@ export class AuthService {
       this.userAuthenticated = true;
       this.mensagemErro.set(null);
 
-      sessionStorage.setItem('userName', user.login);
+      sessionStorage.setItem(this.SESSION_KEY, user.login);
       this.usuarioAtual.set(user.login);
 
       this.exibirMenuManual.set(true);
@@ -90,7 +89,7 @@ export class AuthService {
     this.userAuthenticated = false;
 
     // 1. Limpa o nome salvo no navegador
-    sessionStorage.removeItem('userName');
+    sessionStorage.removeItem(this.SESSION_KEY);
 
     // 2. Reseta os sinais para sumir com o nome e com o menu na hora
     this.usuarioAtual.set(null);

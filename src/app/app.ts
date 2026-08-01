@@ -12,12 +12,12 @@ import { DropdownService } from './shared/services/dropdown.service';
 @Component({
   selector: 'app-root',
   imports: [Logo, MatIcon, ReactiveFormsModule, RouterOutlet, RouterLink, RouterLinkActive],
-  providers: [AuthService, DropdownService, UsuariosGuard, QuartoGuard],
+  providers: [DropdownService, UsuariosGuard, QuartoGuard],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
 export class App {
-  nomeUser = signal<string | null | undefined>(localStorage.getItem('userName'));
+  nomeUser = signal<string | null | undefined>(sessionStorage.getItem('userName'));
 
   mostrarMenu = computed(() => this.nomeUser() !== null && this.nomeUser() !== undefined);
 
@@ -51,9 +51,15 @@ export class App {
   }
 
  ngOnInit() {
+
+  const usuarioSalvo = sessionStorage.getItem('userName');
+    if (usuarioSalvo) {
+      this.nomeUser.set(usuarioSalvo);
+    }
+
     this.authService.mostrarMenuEmitter.subscribe((mostrar: boolean) => {
       if (mostrar) {
-        const usuarioLogado = localStorage.getItem('userName');
+        const usuarioLogado = sessionStorage.getItem('userName');
         this.nomeUser.set(usuarioLogado || 'Usuário Logado');
       } else {
         this.nomeUser.set(null);
