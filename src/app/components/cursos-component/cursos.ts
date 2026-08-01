@@ -12,6 +12,8 @@ import { Router, RouterLink } from '@angular/router';
 import { BehaviorSubject, catchError, delay, Observable, of, switchMap, tap } from 'rxjs';
 
 // Importação do novo Modal compartilhado
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatInputModule } from '@angular/material/input';
 import { ConfirmModalComponent } from '../../shared/confirm-modal/confirm-modal';
 import { Cursos2Service } from './cursos2.service';
 
@@ -34,11 +36,13 @@ export interface PeriodicElement {
     MatTableModule,
     MatButtonModule,
     MatIconModule,
+    MatInputModule,
     MatPaginatorModule,
     MatProgressBarModule,
     MatSnackBarModule,
     RouterLink,
-  ],
+    MatFormFieldModule
+],
   templateUrl: './cursos.html',
   styleUrl: './cursos.scss',
 })
@@ -50,6 +54,11 @@ export class CursosComponent implements OnInit {
   selectedRow = signal<any | null>(null);
 
   dataSource = new MatTableDataSource<PeriodicElement>([]);
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
 
   trackById(index: number, item: PeriodicElement): any {
     return item.docId || item.id || index;
