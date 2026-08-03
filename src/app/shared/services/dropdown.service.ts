@@ -52,7 +52,9 @@ export class DropdownService {
       {nome: 'efc', descr: 'Fundamental Completo'},
       {nome: 'emc', descr: 'Médio Completo'},
       {nome: 'esc', descr: 'Superior Completo'},
-      {nome: 'pgc', descr: 'Pós-Graduação Completa'}
+      {nome: 'pgc', descr: 'Pós-Graduação Completa'},
+      {nome: 'mtc', descr: 'Mestrado Completo'},
+      {nome: 'dtc', descr: 'Doutorado Completo'}
     ];
     return of(escolaList);
   }
