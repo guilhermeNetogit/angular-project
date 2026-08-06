@@ -2,12 +2,12 @@ import { MatButtonModule } from '@angular/material/button';
 import { AuthService } from '../login/service/auth.service';
 import { Component, signal } from '@angular/core';
 import { MatIconModule } from "@angular/material/icon";
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 
 @Component({
   selector: 'app-home',
-  imports: [MatButtonModule, MatIconModule],
+  imports: [MatButtonModule, MatIconModule, RouterLink],
   templateUrl: './home.html',
   styleUrl: './home.scss',
 })

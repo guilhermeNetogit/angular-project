@@ -1,5 +1,17 @@
 <h3>Novo Cadastro</h3>
 
+@if (mensagemSucesso) {
+  <div class="alert alert-success">
+    {{ mensagemSucesso }}
+  </div>
+}
+
+@if (mensagemErro) {
+  <div class="alert alert-danger">
+    {{ mensagemErro }}
+  </div>
+}
+
 <form class="form" [formGroup]="formulario" (ngSubmit)="enviarDados()">
 
   <!-- Linha com 1 campo cheia (Nome) -->
@@ -45,7 +57,7 @@
     <mat-form-field class="field w-40">
       <mat-label>Cargo</mat-label>
       <mat-select formControlName="cargo">
-        <mat-option>-- None --</mat-option>
+        <mat-option [value]="null">-- None --</mat-option>
         <mat-optgroup *ngFor="let group of cargoGroups" [label]="group.name" [disabled]="group.disabled">
           <mat-option *ngFor="let item of group.cargo" [value]="item">
             {{ item.nome }} {{item.nivel}}

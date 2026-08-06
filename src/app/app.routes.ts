@@ -1,7 +1,6 @@
-import { CursosRoutingModule } from './components/cursos-component/cursos.routes';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { CursosComponent } from './components/cursos-component/cursos';
+import { EditLoginComponent } from './components/edit-login-component/edit-login';
 import { FormComponent } from './components/form-component/form';
 import { Home } from './components/home/home';
 import { LoginComponent } from './components/login/login';
@@ -9,9 +8,9 @@ import { PageNotFoundComponent } from './components/pages/page-not-found/page-no
 import { Pipes } from './components/pipes/pipes';
 import { PrimeiroComponent } from './components/primeiro-component/primeiro';
 import { SegundoComponent } from './components/segundo-component/segundo';
+import { UploadFileComponent } from './components/upload-file/upload-file';
 import { authGuard } from './guards/auth.guard';
 import { UsuariosGuard } from './guards/usuarios.guard';
-import { UploadFileComponent } from './components/upload-file/upload-file';
 //import { Usuarios } from './usuarios/usuarios';
 //import { UsuariosDetalhe } from './usuarios/usuarios-detalhe/usuarios-detalhe';
 
@@ -57,6 +56,11 @@ export const appRoutes: Routes = [
     data: { title: 'Cursos Module' },
     loadChildren: () => import('./components/cursos-component/cursos.routes').then((m) => m.CursosRoutingModule),
     canMatch: [authGuard],
+  },
+  {
+    path: 'edit-profile',
+    component: EditLoginComponent,
+    canMatch: [authGuard]
   },
   {
     path: 'upload-file',

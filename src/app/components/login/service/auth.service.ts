@@ -1,35 +1,51 @@
-import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 import { computed, EventEmitter, Injectable, signal } from '@angular/core';
+import { Router } from '@angular/router';
+import { getApp } from 'firebase/app';
+import {
+  collection,
+  doc,
+  getDocs,
+  getFirestore,
+  query,
+  updateDoc,
+  where,
+} from 'firebase/firestore';
+import { firstValueFrom, from, Observable } from 'rxjs';
 import { User } from '../user';
-import { USUARIOS_VALIDOS } from '../../../../environments/users.cfg';
+
+export interface UsuarioConfig {
+  login: string;
+  prefixoPass: string;
+}
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
   private SESSION_KEY = 'userName';
+  private API_URL = '/api/users';
 
   usuarioAtual = signal<string | null>(sessionStorage.getItem(this.SESSION_KEY));
-
   exibirMenuManual = signal<boolean>(!!sessionStorage.getItem(this.SESSION_KEY));
-
   mostrarMenu = computed(() => this.usuarioAtual() !== null || this.exibirMenuManual());
-
   mensagemErro = signal<string | null>(null);
 
   private userAuthenticated: boolean = !!sessionStorage.getItem(this.SESSION_KEY);
   mostrarMenuEmitter = new EventEmitter<boolean>();
 
-  private usuariosValidos = USUARIOS_VALIDOS;
+  private db = getFirestore(getApp(), 'angulardb');
 
-  constructor(private router: Router) {
-
+  constructor(
+    private router: Router,
+    private http: HttpClient,
+  ) {
     const usuarioSalvo = sessionStorage.getItem(this.SESSION_KEY);
-      if (usuarioSalvo) {
-        this.userAuthenticated = true;
-        this.usuarioAtual.set(usuarioSalvo);
-        this.exibirMenuManual.set(true);
-      }
+    if (usuarioSalvo) {
+      this.userAuthenticated = true;
+      this.usuarioAtual.set(usuarioSalvo);
+      this.exibirMenuManual.set(true);
+    }
   }
 
   geraPass(data: Date, prefixo: string): string {
@@ -41,33 +57,77 @@ export class AuthService {
     return `${prefixo}${dia}${mes}${hora}${minuto}`;
   }
 
-  validaLogin(loginInformado: string, senhaInformada: string): boolean {
+  async obterUsuarios(): Promise<UsuarioConfig[]> {
+    try {
+      return await firstValueFrom(this.http.get<UsuarioConfig[]>(this.API_URL));
+    } catch (error) {
+      console.error('Erro ao buscar usuários do servidor:', error);
+      return [];
+    }
+  }
 
-    const usuario = this.usuariosValidos.find(u => u.login === loginInformado);
+  alterarSenhaServidor(login: string, senhaAtual: string, novoPrefixo: string): Observable<any> {
+    const promessa = (async () => {
+      const q = query(collection(this.db, 'usuarios'), where('login', '==', login));
+      const querySnapshot = await getDocs(q);
 
-    if (!usuario) {
+      if (querySnapshot.empty) {
+        throw { status: 404, error: { erro: 'Usuário não encontrado.' } };
+      }
+
+      const userDoc = querySnapshot.docs[0];
+      const userData = userDoc.data();
+
+      const prefixoSalvo = userData['prefixoPass'] || userData['senha'] || userData['password'];
+
+      if (prefixoSalvo !== senhaAtual) {
+        throw { status: 400, error: { erro: 'Senha atual incorreta.' } };
+      }
+
+      const userRef = doc(this.db, 'usuarios', userDoc.id);
+      await updateDoc(userRef, {
+        prefixoPass: novoPrefixo,
+      });
+
+      return { sucesso: true, mensagem: 'Senha alterada com sucesso!' };
+    })();
+
+    return from(promessa);
+  }
+
+  async validaLogin(login: string, senhaDigitada: string): Promise<boolean> {
+  try {
+    const q = query(collection(this.db, 'usuarios'), where('login', '==', login));
+    const querySnapshot = await getDocs(q);
+
+    if (querySnapshot.empty) {
       return false;
     }
 
-    // Cria duas instâncias de tempo: agora e 1 minuto atrás (tolerância)
-    const agora = new Date();
-    const umMinutoAtras = new Date(agora.getTime() - 60000);
+    const userData = querySnapshot.docs[0].data();
+    const prefixoBanco = userData['prefixoPass'] || userData['senha'] || userData['password'];
 
-    // Gera as duas senhas possíveis para o prefixo deste usuário
-    const senhaAtual = this.geraPass(agora, usuario.prefixoPass);
-    const senhaAnterior = this.geraPass(umMinutoAtras, usuario.prefixoPass);
+    if (!prefixoBanco) {
+      return false;
+    }
 
-    return senhaInformada === senhaAtual || senhaInformada === senhaAnterior;
+    // Calcula a senha exata esperada: prefixo + (dia + mes + hora + minuto)
+    const senhaEsperadaHoraAtual = this.geraPass(new Date(), prefixoBanco);
+
+    // Aceita ESTRITAMENTE a senha completa (prefixo + sufixo dinâmico de data/hora)
+    return senhaDigitada === senhaEsperadaHoraAtual;
+  } catch (err) {
+    console.error('Erro ao validar login no Firestore:', err);
+    return false;
   }
+}
 
   userIsAuthenticated(): boolean {
     return !!sessionStorage.getItem(this.SESSION_KEY);
   }
 
-  fazerLogin(user: User) {
-
-    const loginValido = this.validaLogin(user.login, user.senha
-    );
+  async fazerLogin(user: User): Promise<void> {
+    const loginValido = await this.validaLogin(user.login, user.senha);
     if (loginValido) {
       this.userAuthenticated = true;
       this.mensagemErro.set(null);
@@ -88,15 +148,12 @@ export class AuthService {
   fazerLogout() {
     this.userAuthenticated = false;
 
-    // 1. Limpa o nome salvo no navegador
     sessionStorage.removeItem(this.SESSION_KEY);
 
-    // 2. Reseta os sinais para sumir com o nome e com o menu na hora
     this.usuarioAtual.set(null);
     this.exibirMenuManual.set(false);
 
-    // 3. Avisa os componentes antigos (se necessário) e manda para a tela de login
     this.mostrarMenuEmitter.emit(false);
-    this.router.navigate(['/login']); // ou o caminho da sua rota de login
+    this.router.navigate(['/login']);
   }
 }

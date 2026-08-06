@@ -15,8 +15,10 @@ import { merge } from 'rxjs';
 import { EstadoBr } from '../../shared/models/estadobr.models';
 import { ConsultaCepService } from '../../shared/services/consulta-cep.service';
 import { DropdownService } from '../../shared/services/dropdown.service';
-import { MatSelectModule } from "@angular/material/select";
+import { MatSelectModule } from '@angular/material/select';
 import { NgFor } from '@angular/common';
+import { FirebaseCrudService } from '../../shared/services/firebase-crud.service';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 export class ImmediateErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl | null): boolean {
@@ -27,7 +29,16 @@ export class ImmediateErrorStateMatcher implements ErrorStateMatcher {
 @Component({
   selector: 'app-form',
   standalone: true,
-  imports: [ReactiveFormsModule, MatFormFieldModule, MatLabel, MatInputModule, MatButtonModule, MatSelectModule, NgFor],
+  imports: [
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatLabel,
+    MatInputModule,
+    MatButtonModule,
+    MatSelectModule,
+    MatSnackBarModule,
+    NgFor,
+  ],
   templateUrl: './form.html',
   styleUrl: './form.scss',
 })
@@ -41,12 +52,17 @@ export class FormComponent implements OnInit {
   tech = new FormControl('');
   escolaList: any[] = [];
   private urlApi = 'https://httpbin.org/post';
+  isSubmitting = false;
+  mensagemSucesso: string | null = null;
+  mensagemErro: string | null = null;
 
   constructor(
     private formBuilder: FormBuilder,
     private http: HttpClient,
     private dropdownService: DropdownService,
     private cepService: ConsultaCepService,
+    private firebaseCrudService: FirebaseCrudService,
+    private snackBar: MatSnackBar,
   ) {}
 
   ngOnInit() {
@@ -83,7 +99,7 @@ export class FormComponent implements OnInit {
       }),
       cargo: [''],
       escolaridade: [''],
-      tech: []
+      tech: [],
     });
 
     this.configurarValidacaoNumero();
@@ -161,23 +177,51 @@ export class FormComponent implements OnInit {
     }
   }
 
-  enviarDados(): void {
-    if (this.formulario.valid) {
+  async enviarDados(): Promise<void> {
+    if (this.formulario.invalid) {
+      this.snackBar.open('Formulário inválido. Verifique os campos obrigatórios.', 'Fechar', { duration: 3000 });
+      return;
+    }
 
-      const dadosFormulario = this.formulario.value;
+    this.isSubmitting = true;
+    const dadosFormulario = JSON.parse(
+      JSON.stringify(this.formulario.value, (key, value) => (value === undefined ? null : value))
+    );
 
-      console.log('Dados do formulário:', dadosFormulario);
-      this.http.post(this.urlApi, dadosFormulario).subscribe({
-        next: (dados) => {
-          console.log('Resposta da API', dados);
+    try {
+      // 1. Verifica se o e-mail já existe no Firestore
+      const emailExiste = await this.firebaseCrudService.verificarExistencia(
+        'formularios',
+        'email',
+        dadosFormulario.email
+      );
+
+      if (emailExiste) {
+        this.isSubmitting = false;
+        this.snackBar.open('Este e-mail já está cadastrado no sistema!', 'Fechar', {
+          duration: 4000,
+          panelClass: ['snackbar-error'],
+        });
+        return; // Interrompe o envio
+      }
+
+      // 2. Se não existir, realiza o cadastro
+      this.firebaseCrudService.salvar('formularios', dadosFormulario).subscribe({
+        next: (resposta) => {
+          this.isSubmitting = false;
+          this.snackBar.open('Formulário enviado e salvo com sucesso!', 'OK', { duration: 3000 });
           this.formulario.reset();
         },
         error: (erro) => {
-          console.error('Erro ao enviar:', erro);
+          this.isSubmitting = false;
+          this.snackBar.open('Erro ao salvar no Firebase.', 'Fechar', { duration: 4000 });
+          console.error('Erro:', erro);
         },
       });
-    } else {
-      console.log('Formulário inválido. Verifique os campos.');
+    } catch (erro) {
+      this.isSubmitting = false;
+      this.snackBar.open('Erro ao validar e-mail no banco de dados.', 'Fechar', { duration: 4000 });
+      console.error('Erro de verificação:', erro);
     }
   }
 }
