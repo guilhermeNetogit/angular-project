@@ -1,0 +1,26 @@
+.edit-login-container {
+  display: flex;
+  justify-content: center;
+  padding: 2rem;
+
+  mat-card {
+    width: 100%;
+    max-width: 480px;
+  }
+
+  .full-width {
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+
+  hr {
+    margin: 1rem 0;
+    border: 0;
+    border-top: 1px solid #ccc;
+  }
+
+  button {
+    width: 100%;
+    margin-top: 1rem;
+  }
+}

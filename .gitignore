@@ -56,3 +56,4 @@ compose.yaml
 
 
 src/environments/users.cfg.ts
+server/users-data.json

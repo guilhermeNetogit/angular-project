@@ -6,6 +6,61 @@ const path = require('path');
 
 const app = express();
 
+// Middleware de CORS: permite apenas a URL da sua app no Firebase
+app.use(cors({
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+const USERS_FILE = path.join(__dirname, 'users-data.json');
+
+if (!fs.existsSync(USERS_FILE)) {
+  fs.writeFileSync(USERS_FILE, JSON.stringify([], null, 2));
+}
+
+function lerUsuarios() {
+  const data = fs.readFileSync(USERS_FILE, 'utf-8');
+  return JSON.parse(data);
+}
+
+app.get('/api/users', (req, res) => {
+  try {
+    const usuarios = lerUsuarios();
+    return res.status(200).json(usuarios);
+  } catch (err) {
+    return res.status(500).json({ erro: 'Erro ao ler arquivo de usuários.' });
+  }
+});
+
+app.put('/api/users/alter-password', (req, res) => {
+  const { login, novoPrefixo } = req.body;
+
+  if (!login || !novoPrefixo) {
+    return res.status(400).json({ erro: 'Login e novo prefixo são obrigatórios.' });
+  }
+
+  try {
+    const usuarios = lerUsuarios();
+    const index = usuarios.findIndex((u) => u.login === login);
+
+    if (index === -1) {
+      return res.status(404).json({ erro: 'Usuário não encontrado.' });
+    }
+
+    // Atualiza o prefixo da senha e grava no arquivo físico
+    usuarios[index].prefixoPass = novoPrefixo;
+    fs.writeFileSync(USERS_FILE, JSON.stringify(usuarios, null, 2));
+
+    return res.status(200).json({ sucesso: true, mensagem: 'Senha alterada com sucesso!' });
+  } catch (err) {
+    return res.status(500).json({ erro: 'Erro ao atualizar a senha no arquivo.' });
+  }
+});
+
 // Garante a criação da pasta de uploads
 const dir = path.join(__dirname, 'uploads');
 if (!fs.existsSync(dir)) {
@@ -22,16 +77,6 @@ const upload = multer({
   storage: multer.memoryStorage(),
   limits: { fileSize: 20 * 1024 * 1024 } // Limite opcional de 10MB
 });
-
-// Middleware de CORS: permite apenas a URL da sua app no Firebase
-app.use(cors({
-  origin: '*',
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-}));
-
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
 app.get('/', (req, res) => res.send('API de Upload rodando!'));
 

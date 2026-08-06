@@ -16,7 +16,7 @@ import { FormsModule } from "@angular/forms";
 })
 export class LoginComponent {
 
- user: User = new User();
+ user: User = {login: '', senha: ''};
 
  hide = signal(true);
 
@@ -27,7 +27,11 @@ export class LoginComponent {
 
   authService = inject(AuthService);
 
-  fazerLogin() {
-    this.authService.fazerLogin(this.user);
+  fazerLogin(): void {
+  if (!this.user.login || !this.user.senha) {
+    return;
   }
+
+  this.authService.fazerLogin(this.user);
+}
 }

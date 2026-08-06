@@ -1,0 +1,82 @@
+<div class="edit-login-container">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Alterar Dados de Acesso</mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form [formGroup]="loginForm" (ngSubmit)="salvarAlteracoes()">
+        <!-- E-mail / Login -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>E-mail ou Usuário</mat-label>
+          <input matInput formControlName="login" type="text" />
+          <mat-error *ngIf="loginForm.get('login')?.hasError('required')">Informe o login ou e-mail.</mat-error>
+          <mat-error *ngIf="loginForm.get('login')?.hasError('minlength')">Mínimo de 3 caracteres.</mat-error>
+        </mat-form-field>
+
+        <!-- Senha Atual -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Senha Atual (obrigatória)</mat-label>
+          <input
+            matInput
+            formControlName="senhaAtual"
+            [type]="ocultarSenhaAtual ? 'password' : 'text'"
+          />
+          <button
+            mat-icon-button
+            matSuffix
+            type="button"
+            (click)="ocultarSenhaAtual = !ocultarSenhaAtual"
+            [attr.aria-label]="'Ocultar senha'"
+            [attr.aria-pressed]="ocultarSenhaAtual"
+          >
+            <mat-icon>{{ ocultarSenhaAtual ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+          <mat-error *ngIf="loginForm.get('senhaAtual')?.hasError('required')">Informe sua senha atual.</mat-error>
+        </mat-form-field>
+
+        <hr />
+
+        <!-- Nova Senha -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Nova Senha (deixe em branco para não alterar)</mat-label>
+          <input
+            matInput
+            formControlName="novaSenha"
+            [type]="ocultarNovaSenha ? 'password' : 'text'"
+          />
+          <button
+            mat-icon-button
+            matSuffix
+            type="button"
+            (click)="ocultarNovaSenha = !ocultarNovaSenha"
+          >
+            <mat-icon>{{ ocultarNovaSenha ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+          <mat-error *ngIf="loginForm.get('novaSenha')?.hasError('minlength')">Mínimo de 6 caracteres.</mat-error>
+        </mat-form-field>
+
+        <!-- Confirmar Nova Senha -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Confirmar Nova Senha</mat-label>
+          <input
+            matInput
+            formControlName="confirmarNovaSenha"
+            [type]="ocultarNovaSenha ? 'password' : 'text'"
+          />
+          <mat-error *ngIf="loginForm.hasError('senhasDiferentes')">As senhas não coincidem.</mat-error>
+        </mat-form-field>
+
+        <button
+          mat-raised-button
+          color="primary"
+          type="submit"
+          [disabled]="loginForm.invalid || isSubmitting"
+        >
+          <mat-icon>save</mat-icon>
+          Salvar Alterações
+        </button>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

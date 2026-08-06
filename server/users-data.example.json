@@ -1,0 +1,10 @@
+[
+  {
+    "login": "user.exemplo1",
+    "prefixoPass": "exemploSenhaForte1"
+  },
+  {
+    "login": "user.exemplo2",
+    "prefixoPass": "exemploSenhaForte2"
+  }
+]

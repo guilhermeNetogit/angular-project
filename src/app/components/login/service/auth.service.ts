@@ -1,13 +1,21 @@
-import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 import { computed, EventEmitter, Injectable, signal } from '@angular/core';
+import { Router } from '@angular/router';
+import { firstValueFrom, Observable } from 'rxjs';
 import { User } from '../user';
-import { USUARIOS_VALIDOS } from '../../../../environments/users.cfg';
+
+export interface UsuarioConfig {
+  login: string;
+  prefixoPass: string;
+}
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
   private SESSION_KEY = 'userName';
+
+  private API_URL = '/api/users';
 
   usuarioAtual = signal<string | null>(sessionStorage.getItem(this.SESSION_KEY));
 
@@ -20,16 +28,16 @@ export class AuthService {
   private userAuthenticated: boolean = !!sessionStorage.getItem(this.SESSION_KEY);
   mostrarMenuEmitter = new EventEmitter<boolean>();
 
-  private usuariosValidos = USUARIOS_VALIDOS;
-
-  constructor(private router: Router) {
-
+  constructor(
+    private router: Router,
+    private http: HttpClient,
+  ) {
     const usuarioSalvo = sessionStorage.getItem(this.SESSION_KEY);
-      if (usuarioSalvo) {
-        this.userAuthenticated = true;
-        this.usuarioAtual.set(usuarioSalvo);
-        this.exibirMenuManual.set(true);
-      }
+    if (usuarioSalvo) {
+      this.userAuthenticated = true;
+      this.usuarioAtual.set(usuarioSalvo);
+      this.exibirMenuManual.set(true);
+    }
   }
 
   geraPass(data: Date, prefixo: string): string {
@@ -41,33 +49,45 @@ export class AuthService {
     return `${prefixo}${dia}${mes}${hora}${minuto}`;
   }
 
-  validaLogin(loginInformado: string, senhaInformada: string): boolean {
+  async obterUsuarios(): Promise<UsuarioConfig[]> {
+    try {
+      return await firstValueFrom(this.http.get<UsuarioConfig[]>(this.API_URL));
+    } catch (error) {
+      console.error('Erro ao buscar usuários do servidor:', error);
+      return [];
+    }
+  }
 
-    const usuario = this.usuariosValidos.find(u => u.login === loginInformado);
+  alterarSenhaServidor(login: string, novoPrefixo: string): Observable<any> {
+    return this.http.put(`${this.API_URL}/alter-password`, { login, novoPrefixo });
+  }
+
+  async validaLogin(loginInformado: string, senhaInformada: string): Promise<boolean> {
+    const loginLimpo = (loginInformado || '').trim();
+    const senhaLimpa = (senhaInformada || '').trim();
+
+    const usuarios = await this.obterUsuarios();
+    const usuario = usuarios.find((u) => u.login === loginLimpo);
 
     if (!usuario) {
       return false;
     }
 
-    // Cria duas instâncias de tempo: agora e 1 minuto atrás (tolerância)
     const agora = new Date();
     const umMinutoAtras = new Date(agora.getTime() - 60000);
 
-    // Gera as duas senhas possíveis para o prefixo deste usuário
     const senhaAtual = this.geraPass(agora, usuario.prefixoPass);
     const senhaAnterior = this.geraPass(umMinutoAtras, usuario.prefixoPass);
 
-    return senhaInformada === senhaAtual || senhaInformada === senhaAnterior;
+    return senhaLimpa === senhaAtual || senhaLimpa === senhaAnterior;
   }
 
   userIsAuthenticated(): boolean {
     return !!sessionStorage.getItem(this.SESSION_KEY);
   }
 
-  fazerLogin(user: User) {
-
-    const loginValido = this.validaLogin(user.login, user.senha
-    );
+  async fazerLogin(user: User): Promise<void> {
+    const loginValido = await this.validaLogin(user.login, user.senha);
     if (loginValido) {
       this.userAuthenticated = true;
       this.mensagemErro.set(null);
