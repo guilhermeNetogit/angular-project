@@ -8,14 +8,16 @@
       <div class="example-flex-container">
 
         @if (authService.usuarioAtual()) {
+
+        <button matFab extended type="button"
+        class="btn-icon-right btn-login" color="primary" [routerLink]="['/edit-profile']">
+          <mat-icon>edit</mat-icon>
+          Editar Perfil
+        </button>
+
         <button matFab extended type="submit" class="btn-icon-right btn-logout" (click)="sair()">
           Sair
           <mat-icon>logout</mat-icon>
-        </button>
-
-        <button mat-raised-button color="primary" [routerLink]="['/edit-profile']">
-          <mat-icon>edit</mat-icon>
-          Editar Perfil
         </button>
       } @else {
         <button matFab extended type="button" class="btn-icon-right btn-login" (click)="irParaLogin()">

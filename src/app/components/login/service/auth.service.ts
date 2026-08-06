@@ -1,7 +1,17 @@
 import { HttpClient } from '@angular/common/http';
 import { computed, EventEmitter, Injectable, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { firstValueFrom, Observable } from 'rxjs';
+import { getApp } from 'firebase/app';
+import {
+  collection,
+  doc,
+  getDocs,
+  getFirestore,
+  query,
+  updateDoc,
+  where,
+} from 'firebase/firestore';
+import { firstValueFrom, from, Observable } from 'rxjs';
 import { User } from '../user';
 
 export interface UsuarioConfig {
@@ -14,19 +24,17 @@ export interface UsuarioConfig {
 })
 export class AuthService {
   private SESSION_KEY = 'userName';
-
   private API_URL = '/api/users';
 
   usuarioAtual = signal<string | null>(sessionStorage.getItem(this.SESSION_KEY));
-
   exibirMenuManual = signal<boolean>(!!sessionStorage.getItem(this.SESSION_KEY));
-
   mostrarMenu = computed(() => this.usuarioAtual() !== null || this.exibirMenuManual());
-
   mensagemErro = signal<string | null>(null);
 
   private userAuthenticated: boolean = !!sessionStorage.getItem(this.SESSION_KEY);
   mostrarMenuEmitter = new EventEmitter<boolean>();
+
+  private db = getFirestore(getApp(), 'angulardb');
 
   constructor(
     private router: Router,
@@ -58,29 +66,61 @@ export class AuthService {
     }
   }
 
-  alterarSenhaServidor(login: string, novoPrefixo: string): Observable<any> {
-    return this.http.put(`${this.API_URL}/alter-password`, { login, novoPrefixo });
+  alterarSenhaServidor(login: string, senhaAtual: string, novoPrefixo: string): Observable<any> {
+    const promessa = (async () => {
+      const q = query(collection(this.db, 'usuarios'), where('login', '==', login));
+      const querySnapshot = await getDocs(q);
+
+      if (querySnapshot.empty) {
+        throw { status: 404, error: { erro: 'Usuário não encontrado.' } };
+      }
+
+      const userDoc = querySnapshot.docs[0];
+      const userData = userDoc.data();
+
+      const prefixoSalvo = userData['prefixoPass'] || userData['senha'] || userData['password'];
+
+      if (prefixoSalvo !== senhaAtual) {
+        throw { status: 400, error: { erro: 'Senha atual incorreta.' } };
+      }
+
+      const userRef = doc(this.db, 'usuarios', userDoc.id);
+      await updateDoc(userRef, {
+        prefixoPass: novoPrefixo,
+      });
+
+      return { sucesso: true, mensagem: 'Senha alterada com sucesso!' };
+    })();
+
+    return from(promessa);
   }
 
-  async validaLogin(loginInformado: string, senhaInformada: string): Promise<boolean> {
-    const loginLimpo = (loginInformado || '').trim();
-    const senhaLimpa = (senhaInformada || '').trim();
+  async validaLogin(login: string, senhaDigitada: string): Promise<boolean> {
+  try {
+    const q = query(collection(this.db, 'usuarios'), where('login', '==', login));
+    const querySnapshot = await getDocs(q);
 
-    const usuarios = await this.obterUsuarios();
-    const usuario = usuarios.find((u) => u.login === loginLimpo);
-
-    if (!usuario) {
+    if (querySnapshot.empty) {
       return false;
     }
 
-    const agora = new Date();
-    const umMinutoAtras = new Date(agora.getTime() - 60000);
+    const userData = querySnapshot.docs[0].data();
+    const prefixoBanco = userData['prefixoPass'] || userData['senha'] || userData['password'];
 
-    const senhaAtual = this.geraPass(agora, usuario.prefixoPass);
-    const senhaAnterior = this.geraPass(umMinutoAtras, usuario.prefixoPass);
+    if (!prefixoBanco) {
+      return false;
+    }
 
-    return senhaLimpa === senhaAtual || senhaLimpa === senhaAnterior;
+    // Calcula a senha exata esperada: prefixo + (dia + mes + hora + minuto)
+    const senhaEsperadaHoraAtual = this.geraPass(new Date(), prefixoBanco);
+
+    // Aceita ESTRITAMENTE a senha completa (prefixo + sufixo dinâmico de data/hora)
+    return senhaDigitada === senhaEsperadaHoraAtual;
+  } catch (err) {
+    console.error('Erro ao validar login no Firestore:', err);
+    return false;
   }
+}
 
   userIsAuthenticated(): boolean {
     return !!sessionStorage.getItem(this.SESSION_KEY);
@@ -108,15 +148,12 @@ export class AuthService {
   fazerLogout() {
     this.userAuthenticated = false;
 
-    // 1. Limpa o nome salvo no navegador
     sessionStorage.removeItem(this.SESSION_KEY);
 
-    // 2. Reseta os sinais para sumir com o nome e com o menu na hora
     this.usuarioAtual.set(null);
     this.exibirMenuManual.set(false);
 
-    // 3. Avisa os componentes antigos (se necessário) e manda para a tela de login
     this.mostrarMenuEmitter.emit(false);
-    this.router.navigate(['/login']); // ou o caminho da sua rota de login
+    this.router.navigate(['/login']);
   }
 }

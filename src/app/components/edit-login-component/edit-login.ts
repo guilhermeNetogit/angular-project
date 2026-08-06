@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -16,6 +16,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { NgIf } from '@angular/common';
 
 import { AuthService } from '../../components/login/service/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-edit-login',
@@ -42,7 +43,9 @@ export class EditLoginComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
+    private router: Router,
     private snackBar: MatSnackBar,
+    private cdr: ChangeDetectorRef,
     public authService: AuthService
   ) {}
 
@@ -81,38 +84,36 @@ export class EditLoginComponent implements OnInit {
   }
 
   async salvarAlteracoes(): Promise<void> {
-    if (this.loginForm.invalid) {
-      this.snackBar.open('Verifique os campos do formulário.', 'Fechar', { duration: 3000 });
-      return;
-    }
-
-    const { login, senhaAtual, novaSenha } = this.loginForm.value;
-    const loginDigitado = (login || '').trim();
-    const usuarioLogadoAtual = (this.authService.usuarioAtual() || loginDigitado).trim();
-
-    // 1. Valida se a senha atual digitada é válida no servidor
-    const senhaAtualValida = await this.authService.validaLogin(usuarioLogadoAtual, senhaAtual);
-
-    if (!senhaAtualValida) {
-      this.snackBar.open('Senha atual incorreta.', 'Fechar', { duration: 3000 });
-      return;
-    }
-
-    // 2. Se informou nova senha, envia requisição ao servidor
-    if (novaSenha) {
-      this.isSubmitting = true;
-
-      this.authService.alterarSenhaServidor(loginDigitado, novaSenha.trim()).subscribe({
-        next: () => {
-          this.isSubmitting = false;
-          this.snackBar.open('Senha alterada no servidor com sucesso!', 'OK', { duration: 3000 });
-          this.loginForm.patchValue({ senhaAtual: '', novaSenha: '', confirmarNovaSenha: '' });
-        },
-        error: () => {
-          this.isSubmitting = false;
-          this.snackBar.open('Erro ao atualizar a senha no servidor.', 'Fechar', { duration: 3000 });
-        },
-      });
-    }
+  if (this.loginForm.invalid) {
+    this.snackBar.open('Verifique os campos do formulário.', 'Fechar', { duration: 3000 });
+    return;
   }
+
+  const { login, senhaAtual, novaSenha } = this.loginForm.value;
+  const loginDigitado = (login || '').trim();
+
+  if (novaSenha) {
+    this.isSubmitting = true;
+    this.cdr.detectChanges();
+
+    // Chama direto a API do Node
+    this.authService.alterarSenhaServidor(loginDigitado, senhaAtual, novaSenha.trim()).subscribe({
+      next: (res) => {
+        this.isSubmitting = false;
+        this.cdr.detectChanges();
+        this.snackBar.open('Senha alterada com sucesso!', 'OK', { duration: 3000 });
+
+        setTimeout(() => {
+          this.router.navigate(['/home']);
+        }, 1500);
+      },
+      error: (err) => {
+        this.isSubmitting = false;
+        this.cdr.detectChanges();
+        const mensagem = err.error?.erro || 'Erro ao atualizar a senha no servidor.';
+        this.snackBar.open(mensagem, 'Fechar', { duration: 3000 });
+      },
+    });
+  }
+}
 }
