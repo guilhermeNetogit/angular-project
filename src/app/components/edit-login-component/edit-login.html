@@ -6,8 +6,16 @@
 
     <mat-card-content>
       <form [formGroup]="loginForm" (ngSubmit)="salvarAlteracoes()">
+
+        <!-- Nome de Exibição (NOVO CAMPO) -->
+        <mat-form-field appearance="outline" class="form-field-custom">
+          <mat-label>Nome Completo</mat-label>
+          <input matInput formControlName="nomeusu" type="text" placeholder="Ex: Guilherme R. Neto" />
+          <mat-error *ngIf="loginForm.get('nomeusu')?.hasError('required')">Informe seu nome.</mat-error>
+        </mat-form-field>
+
         <!-- E-mail / Login -->
-        <mat-form-field appearance="outline" class="full-width">
+        <mat-form-field appearance="outline" class="form-field-custom">
           <mat-label>E-mail ou Usuário</mat-label>
           <input matInput formControlName="login" type="text" />
           <mat-error *ngIf="loginForm.get('login')?.hasError('required')">Informe o login ou e-mail.</mat-error>
@@ -15,7 +23,7 @@
         </mat-form-field>
 
         <!-- Senha Atual -->
-        <mat-form-field appearance="outline" class="full-width">
+        <mat-form-field appearance="outline" class="form-field-custom">
           <mat-label>Senha Atual (obrigatória)</mat-label>
           <input
             matInput
@@ -38,7 +46,7 @@
         <hr />
 
         <!-- Nova Senha -->
-        <mat-form-field appearance="outline" class="full-width">
+        <mat-form-field appearance="outline" class="form-field-custom">
           <mat-label>Nova Senha (deixe em branco para não alterar)</mat-label>
           <input
             matInput
@@ -57,7 +65,7 @@
         </mat-form-field>
 
         <!-- Confirmar Nova Senha -->
-        <mat-form-field appearance="outline" class="full-width">
+        <mat-form-field appearance="outline" class="form-field-custom">
           <mat-label>Confirmar Nova Senha</mat-label>
           <input
             matInput
@@ -67,15 +75,17 @@
           <mat-error *ngIf="loginForm.hasError('senhasDiferentes')">As senhas não coincidem.</mat-error>
         </mat-form-field>
 
-        <button
-          mat-raised-button
-          color="primary"
-          type="submit"
-          [disabled]="loginForm.invalid || isSubmitting"
-        >
-          <mat-icon>save</mat-icon>
-          Salvar Alterações
-        </button>
+        <div class="actions">
+          <button
+            mat-raised-button
+            color="primary"
+            type="submit"
+            [disabled]="loginForm.invalid || isSubmitting"
+          >
+            <mat-icon>save</mat-icon>
+            Salvar Alterações
+          </button>
+        </div>
       </form>
     </mat-card-content>
   </mat-card>
