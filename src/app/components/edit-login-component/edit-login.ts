@@ -46,30 +46,39 @@ export class EditLoginComponent implements OnInit {
     private router: Router,
     private snackBar: MatSnackBar,
     private cdr: ChangeDetectorRef,
-    public authService: AuthService
+    public authService: AuthService,
   ) {}
 
-  ngOnInit(): void {
-    this.initForm();
-    this.carregarUsuario();
+  async ngOnInit(): Promise<void> {
+    await this.initForm();
+    await this.carregarUsuario();
   }
 
   private initForm(): void {
     this.loginForm = this.fb.group(
       {
+        nomeusu: ['', [Validators.required, Validators.minLength(4)]],
         login: ['', [Validators.required, Validators.minLength(3)]],
         senhaAtual: ['', [Validators.required, Validators.minLength(6)]],
         novaSenha: ['', [Validators.minLength(6)]],
         confirmarNovaSenha: [''],
       },
-      { validators: this.senhasIgualValidator }
+      { validators: this.senhasIgualValidator },
     );
   }
 
-  private carregarUsuario(): void {
+  private async carregarUsuario(): Promise<void> {
     const usuarioLogadoNome = this.authService.usuarioAtual();
+
     if (usuarioLogadoNome) {
-      this.loginForm.patchValue({ login: usuarioLogadoNome });
+      const dados = await this.authService.obterDadosCompletosUsuario(usuarioLogadoNome);
+
+      this.loginForm.patchValue({
+        login: usuarioLogadoNome,
+        nomeusu: dados?.nomeusu,
+      });
+
+      this.cdr.detectChanges();
     }
   }
 
@@ -84,36 +93,38 @@ export class EditLoginComponent implements OnInit {
   }
 
   async salvarAlteracoes(): Promise<void> {
-  if (this.loginForm.invalid) {
-    this.snackBar.open('Verifique os campos do formulário.', 'Fechar', { duration: 3000 });
-    return;
-  }
+    if (this.loginForm.invalid) {
+      this.snackBar.open('Verifique os campos do formulário.', 'Fechar', { duration: 3000 });
+      return;
+    }
 
-  const { login, senhaAtual, novaSenha } = this.loginForm.value;
-  const loginDigitado = (login || '').trim();
+    const { login, nomeusu, senhaAtual, novaSenha } = this.loginForm.value;
+    const loginDigitado = (login || '').trim();
+    const nomeDigitado = (nomeusu || '').trim();
+    const novaSenhaDigitada = (novaSenha || '').trim();
 
-  if (novaSenha) {
     this.isSubmitting = true;
     this.cdr.detectChanges();
 
     // Chama direto a API do Node
-    this.authService.alterarSenhaServidor(loginDigitado, senhaAtual, novaSenha.trim()).subscribe({
-      next: (res) => {
-        this.isSubmitting = false;
-        this.cdr.detectChanges();
-        this.snackBar.open('Senha alterada com sucesso!', 'OK', { duration: 3000 });
+    this.authService
+      .alterarDadosUsuario(loginDigitado, senhaAtual, nomeDigitado, novaSenha.trim())
+      .subscribe({
+        next: (res) => {
+          this.isSubmitting = false;
+          this.cdr.detectChanges();
+          this.snackBar.open('Dados alterados com sucesso!', 'OK', { duration: 3000 });
 
-        setTimeout(() => {
-          this.router.navigate(['/home']);
-        }, 1500);
-      },
-      error: (err) => {
-        this.isSubmitting = false;
-        this.cdr.detectChanges();
-        const mensagem = err.error?.erro || 'Erro ao atualizar a senha no servidor.';
-        this.snackBar.open(mensagem, 'Fechar', { duration: 3000 });
-      },
-    });
+          setTimeout(() => {
+            this.router.navigate(['/home']);
+          }, 1500);
+        },
+        error: (err) => {
+          this.isSubmitting = false;
+          this.cdr.detectChanges();
+          const mensagem = err.error?.erro || 'Erro ao atualizar a senha no servidor.';
+          this.snackBar.open(mensagem, 'Fechar', { duration: 3000 });
+        },
+      });
   }
-}
 }

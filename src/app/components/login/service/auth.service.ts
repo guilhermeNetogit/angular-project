@@ -57,6 +57,20 @@ export class AuthService {
     return `${prefixo}${dia}${mes}${hora}${minuto}`;
   }
 
+  async obterDadosCompletosUsuario(login: string): Promise<any> {
+    try {
+      const q = query(collection(this.db, 'usuarios'), where('login', '==', login));
+      const querySnapshot = await getDocs(q);
+      if (!querySnapshot.empty) {
+        return querySnapshot.docs[0].data();
+      }
+      return null;
+    } catch (error) {
+      console.error('Erro ao buscar dados do usuário no Firestore:', error);
+      return null;
+    }
+  }
+
   async obterUsuarios(): Promise<UsuarioConfig[]> {
     try {
       return await firstValueFrom(this.http.get<UsuarioConfig[]>(this.API_URL));
@@ -66,61 +80,75 @@ export class AuthService {
     }
   }
 
-  alterarSenhaServidor(login: string, senhaAtual: string, novoPrefixo: string): Observable<any> {
-    const promessa = (async () => {
-      const q = query(collection(this.db, 'usuarios'), where('login', '==', login));
-      const querySnapshot = await getDocs(q);
-
-      if (querySnapshot.empty) {
-        throw { status: 404, error: { erro: 'Usuário não encontrado.' } };
-      }
-
-      const userDoc = querySnapshot.docs[0];
-      const userData = userDoc.data();
-
-      const prefixoSalvo = userData['prefixoPass'] || userData['senha'] || userData['password'];
-
-      if (prefixoSalvo !== senhaAtual) {
-        throw { status: 400, error: { erro: 'Senha atual incorreta.' } };
-      }
-
-      const userRef = doc(this.db, 'usuarios', userDoc.id);
-      await updateDoc(userRef, {
-        prefixoPass: novoPrefixo,
-      });
-
-      return { sucesso: true, mensagem: 'Senha alterada com sucesso!' };
-    })();
-
-    return from(promessa);
-  }
-
-  async validaLogin(login: string, senhaDigitada: string): Promise<boolean> {
-  try {
+  alterarDadosUsuario(
+  login: string,
+  senhaAtual: string,
+  novoNomeUsu?: string,
+  novoPrefixo?: string,
+): Observable<any> {
+  const promessa = (async () => {
     const q = query(collection(this.db, 'usuarios'), where('login', '==', login));
     const querySnapshot = await getDocs(q);
 
     if (querySnapshot.empty) {
-      return false;
+      throw { status: 404, error: { erro: 'Usuário não encontrado.' } };
     }
 
-    const userData = querySnapshot.docs[0].data();
-    const prefixoBanco = userData['prefixoPass'] || userData['senha'] || userData['password'];
+    const userDoc = querySnapshot.docs[0];
+    const userData = userDoc.data();
 
-    if (!prefixoBanco) {
-      return false;
+    const prefixoSalvo = userData['prefixoPass'] || userData['senha'] || userData['password'];
+
+    if (prefixoSalvo !== senhaAtual) {
+      throw { status: 400, error: { erro: 'Senha atual incorreta.' } };
     }
 
-    // Calcula a senha exata esperada: prefixo + (dia + mes + hora + minuto)
-    const senhaEsperadaHoraAtual = this.geraPass(new Date(), prefixoBanco);
+    const dadosAtualizacao: Record<string, any> = {};
 
-    // Aceita ESTRITAMENTE a senha completa (prefixo + sufixo dinâmico de data/hora)
-    return senhaDigitada === senhaEsperadaHoraAtual;
-  } catch (err) {
-    console.error('Erro ao validar login no Firestore:', err);
-    return false;
-  }
+    if (novoNomeUsu) {
+      dadosAtualizacao['nomeusu'] = novoNomeUsu;
+    }
+
+    // Só atualiza a senha no banco se uma nova senha tiver sido digitada
+    if (novoPrefixo && novoPrefixo.trim() !== '') {
+      dadosAtualizacao['prefixoPass'] = novoPrefixo.trim();
+    }
+
+    const userRef = doc(this.db, 'usuarios', userDoc.id);
+    await updateDoc(userRef, dadosAtualizacao);
+
+    return { sucesso: true, mensagem: 'Dados atualizados com sucesso!' };
+  })();
+
+  return from(promessa);
 }
+
+  async validaLogin(login: string, senhaDigitada: string): Promise<boolean> {
+    try {
+      const q = query(collection(this.db, 'usuarios'), where('login', '==', login));
+      const querySnapshot = await getDocs(q);
+
+      if (querySnapshot.empty) {
+        return false;
+      }
+
+      const userData = querySnapshot.docs[0].data();
+      const prefixoBanco = userData['prefixoPass'] || userData['senha'] || userData['password'];
+
+      if (!prefixoBanco) {
+        return false;
+      }
+
+      // Calcula a senha exata esperada: prefixo + (dia + mes + hora + minuto)
+      const senhaEsperadaHoraAtual = this.geraPass(new Date(), prefixoBanco);
+
+      // Aceita ESTRITAMENTE a senha completa (prefixo + sufixo dinâmico de data/hora)
+      return senhaDigitada === senhaEsperadaHoraAtual;
+    } catch (err) {
+      console.error('Erro ao validar login no Firestore:', err);
+      return false;
+    }
+  }
 
   userIsAuthenticated(): boolean {
     return !!sessionStorage.getItem(this.SESSION_KEY);
