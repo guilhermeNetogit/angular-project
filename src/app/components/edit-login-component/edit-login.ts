@@ -16,7 +16,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { NgIf } from '@angular/common';
 
 import { AuthService } from '../../components/login/service/auth.service';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-edit-login',
@@ -30,6 +30,7 @@ import { Router } from '@angular/router';
     MatCardModule,
     MatIconModule,
     NgIf,
+    RouterLink
   ],
   templateUrl: './edit-login.html',
   styleUrl: './edit-login.scss',

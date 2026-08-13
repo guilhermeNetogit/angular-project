@@ -83,8 +83,18 @@
             [disabled]="loginForm.invalid || isSubmitting"
           >
             <mat-icon>save</mat-icon>
-            Salvar Alterações
+            Salvar
           </button>
+
+         <button
+             mat-stroked-button
+             type="button"
+             routerLink="/home"
+             [disabled]="isSubmitting"
+           >
+             <mat-icon>cancel</mat-icon>
+             Cancelar
+           </button>
         </div>
       </form>
     </mat-card-content>
