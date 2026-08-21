@@ -3,40 +3,45 @@
 <div class="example-container">
 
   @if (authService.mensagemErro()) {
-      <div class="alert-error">
-        {{ authService.mensagemErro() }}
-      </div>
-    }
+  <div class="alert-error">
+    {{ authService.mensagemErro() }}
+  </div>
+  }
 
-  <mat-form-field>
-    <mat-label>Enter your login</mat-label>
-    <input [(ngModel)]="user.login" required matInput class="example-left-align"/>
-  </mat-form-field>
+  <form #loginForm="ngForm" (ngSubmit)="fazerLogin(loginForm)">
 
-  <mat-form-field>
-    <mat-label>Enter your password</mat-label>
-    <input [(ngModel)]="user.senha" required matInput [type]="hide() ? 'password' : 'text'" />
-    <button
-      matIconButton
-      matSuffix
-      (click)="clickEvent($event)"
-      [attr.aria-label]="'Hide password'"
-      [attr.aria-pressed]="hide()"
-    >
-      <mat-icon>{{hide() ? 'visibility_off' : 'visibility'}}</mat-icon>
-    </button>
-  </mat-form-field>
+    <mat-form-field>
+      <mat-label>Enter your login</mat-label>
+      <input name="login" [(ngModel)]="user.login" #loginModel="ngModel" required matInput class="example-left-align" />
+      @if (loginModel.invalid && (loginModel.touched || loginForm.submitted)) {
+      <mat-error>O login é obrigatório</mat-error>
+      }
+    </mat-form-field>
 
-  <section>
-    <div class="example-button-row">
-    <div class="example-flex-container">
-      <button matFab extended type="submit" class="btn-icon-right btn-login" (click)="fazerLogin()">
-        Login
-        <mat-icon>login</mat-icon>
+    <mat-form-field>
+      <mat-label>Enter your password</mat-label>
+      <input name="senha" [(ngModel)]="user.senha" #senhaModel="ngModel" required matInput
+        [type]="hide() ? 'password' : 'text'" />
+      <button type="button" matIconButton matSuffix (click)="clickEvent($event)" [attr.aria-label]="'Hide password'"
+        [attr.aria-pressed]="hide()">
+        <mat-icon>{{hide() ? 'visibility_off' : 'visibility'}}</mat-icon>
       </button>
-    </div>
-    </div>
-  </section>
+      @if (senhaModel.invalid && (senhaModel.touched || loginForm.submitted)) {
+      <mat-error>A senha é obrigatória</mat-error>
+      }
+    </mat-form-field>
+
+    <section>
+      <div class="example-button-row">
+        <div class="example-flex-container">
+          <button matFab extended type="submit" class="btn-icon-right btn-login" [disabled]="loginForm.invalid">
+            Login
+            <mat-icon>login</mat-icon>
+          </button>
+        </div>
+      </div>
+    </section>
+
+  </form>
 
 </div>
-

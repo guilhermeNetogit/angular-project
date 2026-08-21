@@ -6,7 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { AuthService } from './service/auth.service';
 import { User } from './user';
-import { FormsModule } from "@angular/forms";
+import { FormsModule, NgForm } from "@angular/forms";
 
 @Component({
   selector: 'app-login',
@@ -16,19 +16,17 @@ import { FormsModule } from "@angular/forms";
 })
 export class LoginComponent {
 
- user: User = {login: '', senha: ''};
-
- hide = signal(true);
+  user: User = {login: '', senha: ''};
+  hide = signal(true);
+  authService = inject(AuthService);
 
   clickEvent(event: MouseEvent) {
     this.hide.set(!this.hide());
     event.stopPropagation();
   }
 
-  authService = inject(AuthService);
-
-  fazerLogin(): void {
-  if (!this.user.login || !this.user.senha) {
+  fazerLogin(form: NgForm): void {
+  if (form.invalid) {
     return;
   }
 
