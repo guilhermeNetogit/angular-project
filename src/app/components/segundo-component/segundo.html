@@ -19,7 +19,7 @@
       <mat-form-field>
         <mat-label>Pokemon</mat-label>
         <mat-select [formControl]="pokemonControl">
-          <mat-option>-- None --</mat-option>
+          <mat-option value="none">-- None --</mat-option>
           @for (group of pokemonGroups; track group) {
           <mat-optgroup [label]="group.name" [disabled]="group.disabled">
             @for (pokemon of group.pokemon; track pokemon) {
@@ -32,7 +32,13 @@
 
       <br>
 
-      <div class="pokemon-text {{ pokemonControl.value }}"> You selected: {{pokemonControl.value}}</div>
+      <div class="pokemon-text {{ selecaoAtual?.groupName }}">
+        Type: {{ selecaoAtual ? selecaoAtual.groupType : 'None' }}
+      </div>
+    </div>
+
+    <div class="pokemon-image">
+      <img [src]="imagemPokemonAtual" alt="Pokemon" width="200" />
     </div>
   </article>
 </section>
