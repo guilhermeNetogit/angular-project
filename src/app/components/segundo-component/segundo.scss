@@ -11,15 +11,15 @@ p, h4 {
 
   // Cores baseadas no grupo selecionado
   &.grass {
-    background-color: #4caf50; // Verde (Grass)
+    background-color: #9bcc50; // Verde (Grass)
   }
 
   &.water {
-    background-color: #2196f3; // Azul (Water)
+    background-color: #4592c4; // Azul (Water)
   }
 
   &.fire {
-    background-color: #f44336; // Vermelho (Fire)
+    background-color: #fd7d24; // Laranja (Fire)
   }
 
   &.psychic {
@@ -29,5 +29,9 @@ p, h4 {
   &.eletric {
     background-color: #f8d030;
     color: rgb(50,50,50);
+  }
+
+  &.fight {
+    background-color: #d56723;
   }
 }

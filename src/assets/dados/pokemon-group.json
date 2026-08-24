@@ -1,0 +1,57 @@
+[
+  {
+    "name": "Grass",
+    "pokemon": [
+      { "value": "1", "viewValue": "Bulbasaur" },
+      { "value": "43", "viewValue": "Oddish" },
+      { "value": "69", "viewValue": "Bellsprout" }
+    ]
+  },
+  {
+    "name": "Water",
+    "pokemon": [
+      { "value": "7", "viewValue": "Squirtle" },
+      { "value": "54", "viewValue": "Psyduck" },
+      { "value": "116", "viewValue": "Horsea" },
+      { "value": "230", "viewValue": "Kindra" },
+      { "value": "748", "viewValue": "Toxapex" }
+    ]
+  },
+  {
+    "name": "Fire",
+    "disabled": false,
+    "pokemon": [
+      { "value": "4", "viewValue": "Charmander" },
+      { "value": "37", "viewValue": "Vulpix" },
+      { "value": "136", "viewValue": "Flareon" },
+      { "value": "6", "viewValue": "Charizard" }
+    ]
+  },
+  {
+    "name": "Psychic",
+    "pokemon": [
+      { "value": "65", "viewValue": "Alakazam" },
+      { "value": "151", "viewValue": "Mew" },
+      { "value": "150", "viewValue": "Mewtwo" },
+      { "value": "178", "viewValue": "Xato" }
+    ]
+  },
+  {
+    "name": "Eletric",
+    "pokemon": [
+      { "value": "25", "viewValue": "Pikachu" },
+      { "value": "82", "viewValue": "Magneton" },
+      { "value": "100", "viewValue": "Voltorb" },
+      { "value": "145", "viewValue": "Zapdos" }
+    ]
+  },
+  {
+    "name": "Fight",
+    "pokemon": [
+      { "value": "106", "viewValue": "Hitmonlee" },
+      { "value": "107", "viewValue": "Hitmonchan" },
+      { "value": "236", "viewValue": "Tyrogue" },
+      { "value": "237", "viewValue": "Hitmontop" }
+    ]
+  }
+]
