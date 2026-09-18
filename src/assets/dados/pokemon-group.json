@@ -1,20 +1,34 @@
 [
   {
-    "name": "Grass",
-    "pokemon": [
-      { "value": "1", "viewValue": "Bulbasaur" },
-      { "value": "43", "viewValue": "Oddish" },
-      { "value": "69", "viewValue": "Bellsprout" }
+    "name": "Dark",
+    "pokemon":[
+      { "value": "491", "viewValue": "Darkrai" },
+      { "value": "229", "viewValue": "Houndoom" },
+      { "value" : "262", "viewValue": "Mightyena"}
     ]
   },
   {
-    "name": "Water",
+    "name": "Eletric",
     "pokemon": [
-      { "value": "7", "viewValue": "Squirtle" },
-      { "value": "54", "viewValue": "Psyduck" },
-      { "value": "116", "viewValue": "Horsea" },
-      { "value": "230", "viewValue": "Kindra" },
-      { "value": "748", "viewValue": "Toxapex" }
+      { "value": "25", "viewValue": "Pikachu" },
+      { "value": "82", "viewValue": "Magneton" },
+      { "value": "100", "viewValue": "Voltorb" },
+      { "value": "145", "viewValue": "Zapdos" }
+    ]
+  },
+  {
+    "name": "Fairy",
+    "pokemon": [
+      { "value": "700", "viewValue": "Sylveon" }
+    ]
+  },
+  {
+    "name": "Fight",
+    "pokemon": [
+      { "value": "106", "viewValue": "Hitmonlee" },
+      { "value": "107", "viewValue": "Hitmonchan" },
+      { "value": "236", "viewValue": "Tyrogue" },
+      { "value": "237", "viewValue": "Hitmontop" }
     ]
   },
   {
@@ -28,6 +42,20 @@
     ]
   },
   {
+    "name": "Ghost",
+    "pokemon": [
+      { "value": "487", "viewValue": "Giratina" }
+    ]
+  },
+  {
+    "name": "Grass",
+    "pokemon": [
+      { "value": "1", "viewValue": "Bulbasaur" },
+      { "value": "43", "viewValue": "Oddish" },
+      { "value": "69", "viewValue": "Bellsprout" }
+    ]
+  },
+  {
     "name": "Psychic",
     "pokemon": [
       { "value": "65", "viewValue": "Alakazam" },
@@ -37,21 +65,14 @@
     ]
   },
   {
-    "name": "Eletric",
+    "name": "Water",
     "pokemon": [
-      { "value": "25", "viewValue": "Pikachu" },
-      { "value": "82", "viewValue": "Magneton" },
-      { "value": "100", "viewValue": "Voltorb" },
-      { "value": "145", "viewValue": "Zapdos" }
-    ]
-  },
-  {
-    "name": "Fight",
-    "pokemon": [
-      { "value": "106", "viewValue": "Hitmonlee" },
-      { "value": "107", "viewValue": "Hitmonchan" },
-      { "value": "236", "viewValue": "Tyrogue" },
-      { "value": "237", "viewValue": "Hitmontop" }
+      { "value": "7", "viewValue": "Squirtle" },
+      { "value": "54", "viewValue": "Psyduck" },
+      { "value": "116", "viewValue": "Horsea" },
+      { "value": "230", "viewValue": "Kindra" },
+      { "value": "318", "viewValue": "Carvanha" },
+      { "value": "748", "viewValue": "Toxapex" }
     ]
   }
 ]
