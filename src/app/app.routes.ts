@@ -53,7 +53,7 @@ export const appRoutes: Routes = [
   },
   {
     path: 'cursos',
-    data: { title: 'Cursos Module' },
+    data: { title: 'Chemical Elements' },
     loadChildren: () => import('./components/cursos-component/cursos.routes').then((m) => m.CursosRoutingModule),
     canMatch: [authGuard],
   },
