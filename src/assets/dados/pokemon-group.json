@@ -19,7 +19,9 @@
   {
     "name": "Fairy",
     "pokemon": [
-      { "value": "700", "viewValue": "Sylveon" }
+      { "value": "700", "viewValue": "Sylveon" },
+      { "value": "959", "viewValue": "Tinkaton" },
+      { "value": "1006", "viewValue": "Iron Valiant" }
     ]
   },
   {
@@ -53,6 +55,12 @@
       { "value": "1", "viewValue": "Bulbasaur" },
       { "value": "43", "viewValue": "Oddish" },
       { "value": "69", "viewValue": "Bellsprout" }
+    ]
+  },
+  {
+    "name": "Poison",
+    "pokemon": [
+      { "value": "1016", "viewValue": "Fezandipiti" }
     ]
   },
   {
