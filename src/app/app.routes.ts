@@ -35,7 +35,7 @@ export const appRoutes: Routes = [
   {
     path: 'segundo',
     component: SegundoComponent,
-    data: { title: 'Second Module' },
+    data: { title: 'Pokemon' },
     canMatch: [authGuard],
   },
   {
